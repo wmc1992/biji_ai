@@ -7,9 +7,11 @@ repo_url: https://github.com/wmc1992/biji_ai
 edit_uri: ""
 
 theme:
-    name: mkdocs
+    # name: mkdocs
     # name: readthedocs
-    locale: zh_CN
+    name: ivory
+    # name: rtd-dropdown
+    locale: en
     analytics: {gtag: 'G-274394082'}
     highlightjs: true
     hljs_languages:
@@ -21,19 +23,29 @@ nav:
     - "Home": "index.md"
     - "NLP工程":
         - "sklearn计算不平衡数据的权重": "NLP工程/sklearn计算不平衡数据的权重.md"
+    - "NLP算法":
+        - "Batch_Norm": "NLP算法/batch_normalize_markdown.md"
+        - "Layer_Norm": "NLP算法/layer_normalize_markdown.md"
 
 extra_css:
     - css/extra.css
 
 markdown_extensions:
     - toc:
-        permalink: True
-    - admonition
-    - attr_list
-    - def_list
+        permalink: False
     - mdx_gh_links:
         user: mkdocs
         repo: mkdocs
+    - admonition
+    - attr_list
+    - def_list
+    - pymdownx.arithmatex
+
+extra_javascript:
+  # other extra java script
+  - mathjax-config.js
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
 
 copyright: Copyright &copy; 2021 Microsoft Research
 
