@@ -7,8 +7,8 @@ repo_url: https://github.com/wmc1992/biji_ai
 edit_uri: ""
 
 theme:
-    # name: mkdocs
-    name: readthedocs
+    name: mkdocs
+    # name: readthedocs
     locale: zh_CN
     analytics: {gtag: 'G-274394082'}
     highlightjs: true
