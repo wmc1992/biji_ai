@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="mingchao.wang">
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <title>Layer_Norm &mdash; AI笔记</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../css/extra.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/django.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../.." class="site-name"> AI笔记</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../..">Home</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">NLP工程</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../../NLP%E5%B7%A5%E7%A8%8B/sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a></li>
+</ul></li>
+                    <li class="toctree-l1"><button class="section nav-item">NLP算法</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../batch_normalize_markdown/">Batch_Norm</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Layer_Norm</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#1ln">1、LN的具体操作步骤</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#2ln">2、LN 为了解决什么问题</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#3ln">3、LN 出现之前是如何解决上述问题的</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#4ln">4、LN 的优势</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#5ln">5、LN效果测试代码</a></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/wmc1992/biji_ai" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../batch_normalize_markdown/">&laquo; Previous</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../.." class="site-name"> AI笔记</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>NLP算法</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="layer-normalize">Layer Normalize</h1>
+<h2 id="1ln">1、LN的具体操作步骤</h2>
+<p>其操作步骤可分为三部分：</p>
+<ul>
+<li>求每条数据各特征之间的均值和标准差；</li>
+<li>每条数据的每个特征减去各自数据的均值，除上各自数据的标准差；</li>
+<li>对经过上一步骤的输出再经过一个线性变换；</li>
+</ul>
+<p>以上是文字形式的说明，以下是公式形式。</p>
+<p><strong>输入</strong>：</p>
+<p>一个 mini-batch 的数据在某层网络的输出为 <span class="arithmatex"><span class="MathJax_Preview">\{\alpha_1, \alpha_2, ..., \alpha_m\}</span><script type="math/tex">\{\alpha_1, \alpha_2, ..., \alpha_m\}</script></span>，其中 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 为batch size；</p>
+<p>记 <span class="arithmatex"><span class="MathJax_Preview">\alpha_i^{(j)}</span><script type="math/tex">\alpha_i^{(j)}</script></span> 为该mini-batch中第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据的第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个特征；</p>
+<p><span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> 为每条数据的特征数，每条数据的特征数不一定相同；</p>
+<p><span class="arithmatex"><span class="MathJax_Preview">g</span><script type="math/tex">g</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span> 为可学习参数；</p>
+<blockquote>
+<p>按照上述定义，某层网络的输出的shape为 <span class="arithmatex"><span class="MathJax_Preview">[m, T]</span><script type="math/tex">[m, T]</script></span>，<span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 为batch-size，<span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> 为每条数据的特征数量；</p>
+</blockquote>
+<p><strong>输出</strong>：</p>
+<p><span class="arithmatex"><span class="MathJax_Preview">y_i^{(j)}</span><script type="math/tex">y_i^{(j)}</script></span> 为该 mini-batch 中第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个特征经过LN之后的输出；</p>
+<p><strong>公式</strong>：</p>
+<p>第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据各特征的均值：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\mu_i = \frac{1}{T} \sum_{j=1}^{T} \alpha_i^{(j)} </div>
+<script type="math/tex; mode=display">\mu_i = \frac{1}{T} \sum_{j=1}^{T} \alpha_i^{(j)} </script>
+</div>
+<p>第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据各特征的方差：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\sigma_i^2 = \frac{1}{T} \sum_{j=1}^{T} (\alpha_i^{(j)} - \mu_i)^2</div>
+<script type="math/tex; mode=display">\sigma_i^2 = \frac{1}{T} \sum_{j=1}^{T} (\alpha_i^{(j)} - \mu_i)^2</script>
+</div>
+<p>减去均值，除上标准化，<span class="arithmatex"><span class="MathJax_Preview">\epsilon</span><script type="math/tex">\epsilon</script></span> 用于避免除数为0：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\hat{\alpha_i^{(j)}} = \frac{\alpha_i^{(j)} - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}} </div>
+<script type="math/tex; mode=display">\hat{\alpha_i^{(j)}} = \frac{\alpha_i^{(j)} - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}} </script>
+</div>
+<p>第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个特征经过LN后的结果：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">y_i^{(j)} = g \hat{\alpha_i^{(j)}} + b </div>
+<script type="math/tex; mode=display">y_i^{(j)} = g \hat{\alpha_i^{(j)}} + b </script>
+</div>
+<h2 id="2ln">2、LN 为了解决什么问题</h2>
+<ol>
+<li>
+<p>深度模型训练时所需要的计算资源非常大，想要减少训练所需时间的一个方法是：normalize the activities of neurons</p>
+</li>
+<li>
+<p>增加训练过程的稳定性；</p>
+</li>
+</ol>
+<h2 id="3ln">3、LN 出现之前是如何解决上述问题的</h2>
+<p>LN 出现之前通过 BN 解决上述问题；</p>
+<p>BN的优点：</p>
+<ul>
+<li>可以解决 "convariate shift" 问题，缩短了模型训练所需的时间；</li>
+<li>能够使饱和激活函数的输入落在非饱和区，增加了训练的稳定性；</li>
+</ul>
+<p>BN的缺点：</p>
+<ul>
+<li>当 batch size 特别小时，表现不好；</li>
+<li>当每条数据的长度不一致时，比如文本数据，效果不好；</li>
+<li>在 RNN 网络中，表现不好；</li>
+</ul>
+<h2 id="4ln">4、LN 的优势</h2>
+<p>Normalization 的作用：降低了对参数初始化的需求，允许使用更大的学习率，有一定的正则化作用可抗过拟合，使训练更加稳定。</p>
+<p>假设某一层输出的中间结果为 <span class="arithmatex"><span class="MathJax_Preview">[m, T]</span><script type="math/tex">[m, T]</script></span>，<span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 为batch-size，<span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> 为每条数据的特征数量，那么：</p>
+<ul>
+<li>BN 是对 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 这个维度做归一化；</li>
+<li>LN 是对 <span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> 这个维度做归一化；</li>
+</ul>
+<p>优势（以下都有待考证）：</p>
+<ul>
+<li>在 RNN 网络中，表现较好；</li>
+<li>在 batch size 较小的网络中，表现较好；</li>
+<li>LN 抹杀了不同样本间的大小关系，保留了同一个样本内部的特征之间的大小关系，这对于时间序列任务或NLP任务来说非常重要；</li>
+</ul>
+<h2 id="5ln">5、LN效果测试代码</h2>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+
+# NLP例子，一般在NLP任务中，其维度为[batch_size, seq_len, hidden_dim]，LayerNorm操作仅对最后一个维度做操作
+batch, sentence_length, hidden_dim = 20, 5, 10
+embedding = torch.randn(batch, sentence_length, hidden_dim)
+
+print(&quot;LayerNorm前, 均值: &quot;)
+mean_result = embedding.mean((-1))  # 计算维度 hidden_dim 的均值
+print([f&quot;%.2f&quot; % float(y) for x in mean_result.detach().numpy().tolist() for y in x][:20], &quot;...&quot;)
+print(&quot;LayerNorm前, 方差: &quot;)
+var_result = embedding.var((-1))  # 计算维度 hidden_dim 的方差
+print([f&quot;%.2f&quot; % float(y) for x in var_result.detach().numpy().tolist() for y in x][:20], &quot;...&quot;)
+
+# 该LayerNorm层的input的维度为[*, hidden_dim]，其仅对初始化时给定的hidden_dim这个维度做归一化
+layer_norm = nn.LayerNorm(hidden_dim)
+embedding = layer_norm(embedding)
+
+print(&quot;LayerNorm后, 均值: &quot;)
+mean_result = embedding.mean((-1))  # 计算维度 hidden_dim 的均值
+print([f&quot;%.2f&quot; % float(y) for x in mean_result.detach().numpy().tolist() for y in x][:20], &quot;...&quot;)
+print(&quot;LayerNorm后, 方差: &quot;)
+var_result = embedding.var((-1))  # 计算维度 hidden_dim 的方差
+print([f&quot;%.2f&quot; % float(y) for x in var_result.detach().numpy().tolist() for y in x][:20], &quot;...&quot;)
+</code></pre>
+<p>输出结果：</p>
+<pre><code>LayerNorm前, 均值: 
+['0.23', '0.23', '0.18', '-0.06', '-0.45', '-0.24', '0.34', '0.23', '-0.47', '-0.44', '0.12', '-0.26', '-0.37', '0.33', '-0.50', '0.11', '0.14', '0.37', '-0.12', '0.31'] ...
+LayerNorm前, 方差: 
+['1.34', '0.51', '1.16', '0.90', '0.17', '0.50', '0.56', '0.61', '0.70', '1.06', '0.85', '1.26', '1.34', '1.45', '1.52', '0.75', '0.63', '1.37', '1.34', '1.51'] ...
+LayerNorm后, 均值: 
+['0.00', '-0.00', '-0.00', '0.00', '0.00', '-0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '-0.00', '0.00', '0.00', '-0.00', '-0.00', '-0.00', '0.00'] ...
+LayerNorm后, 方差: 
+['1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11', '1.11'] ...
+</code></pre>
+<p>可以看出，经过归一化之后，其均值为0，方差为1.11（这里为什么是1.11，而不是1，还没搞清楚）；</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../batch_normalize_markdown/" title="Batch_Norm"><span>Previous</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js"></script>
+    <script src="../../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../search/main.js"></script>
+</body>
+
+</html>
