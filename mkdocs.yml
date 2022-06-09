@@ -1,4 +1,4 @@
-site_name: 王明超AI笔记
+site_name: AI笔记
 site_url: https://mingchao.wang/biji_ai/
 site_description: 王明超AI笔记
 site_author: mingchao.wang
@@ -27,7 +27,7 @@ extra_css:
 
 markdown_extensions:
     - toc:
-        permalink: "#"
+        permalink: True
     - admonition
     - attr_list
     - def_list
@@ -35,7 +35,7 @@ markdown_extensions:
         user: mkdocs
         repo: mkdocs
 
-copyright: Copyright &copy; 2014 <a href="https://twitter.com/_tomchristie">Tom Christie</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkDocs Team</a>.
+copyright: Copyright &copy; 2021 Microsoft Research
 
 plugins:
     - search
