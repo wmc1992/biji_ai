@@ -6,3 +6,4 @@ site/
 shell_start.sh
 shell_build.sh
 shell_commit.sh
+shell_deploy.sh
