@@ -1,0 +1,8 @@
+.DS_Store
+site/
+.vscode
+.env
+.idea
+shell_start.sh
+shell_build.sh
+shell_commit.sh

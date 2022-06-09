@@ -1,0 +1,45 @@
+site_name: 王明超AI笔记
+site_url: https://mingchao.wang/biji_ai/
+site_description: 王明超AI笔记
+site_author: mingchao.wang
+
+repo_url: https://github.com/wmc1992/biji_ai
+edit_uri: ""
+
+theme:
+    # name: mkdocs
+    name: readthedocs
+    locale: zh_CN
+    analytics: {gtag: 'G-274394082'}
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - django
+        - python
+
+nav:
+    - Home: index.md
+    - About: about.md
+
+extra_css:
+    - css/extra.css
+
+markdown_extensions:
+    - toc:
+        permalink: "#"
+    - admonition
+    - attr_list
+    - def_list
+    - mdx_gh_links:
+        user: mkdocs
+        repo: mkdocs
+
+copyright: Copyright &copy; 2014 <a href="https://twitter.com/_tomchristie">Tom Christie</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkDocs Team</a>.
+
+plugins:
+    - search
+    - redirects:
+        redirect_maps:
+            user-guide/plugins.md: dev-guide/plugins.md
+            user-guide/custom-themes.md: dev-guide/themes.md
+            user-guide/styling-your-docs.md: user-guide/choosing-your-theme.md
