@@ -14,6 +14,8 @@
 # limitations under the License.
 """Create masked LM/next sentence masked_lm TF examples for BERT."""
 
+# 参考：https://github.com/ymcui/Chinese-BERT-wwm/issues/13
+
 import collections
 import random
 import argparse
