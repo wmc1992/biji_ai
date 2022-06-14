@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="mingchao.wang">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>KL散度 &mdash; 王明超AI笔记</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="../css/extra.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/django.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> 王明超AI笔记</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../batch_normalize_markdown/">Batch_Norm</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../layer_normalize_markdown/">Layer_Norm</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">KL散度</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#_1">一、定义</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#kl_1">二、在机器学习中KL散度的作用</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#kl_2">三、熵、KL散度、交叉熵</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#kl_3">四、机器学习中为什么多用交叉熵而不是KL散度</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#kl_4">五、KL散度的性质</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#reference">Reference</a></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/wmc1992/biji_ai" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../layer_normalize_markdown/">&laquo; Previous</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> 王明超AI笔记</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="kl">KL散度</h1>
+<h2 id="_1">一、定义</h2>
+<p>KL散度是一种衡量两个概率分布 P 和 Q 的差异的方法；</p>
+<p>对于连续随机变量的概率分布来说，KL散度公式为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">D_{KL}(p||q) = \int_x p(x) \log \frac{p(x)}{q(x)} dx</div>
+<script type="math/tex; mode=display">D_{KL}(p||q) = \int_x p(x) \log \frac{p(x)}{q(x)} dx</script>
+</div>
+<p>对于离散随机变量的概率分布来说，KL散度公式为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">D_{KL}(p||q) = \sum_x p(x) \log \frac{p(x)}{q(x)}</div>
+<script type="math/tex; mode=display">D_{KL}(p||q) = \sum_x p(x) \log \frac{p(x)}{q(x)}</script>
+</div>
+<p>机器学习和深度学习中使用的都是离散随机变量的概率分布，下面将仅讨论离散情况下的KL散度。</p>
+<h2 id="kl_1">二、在机器学习中KL散度的作用</h2>
+<p>机器学习的目标就是：希望模型学到的分布 <span class="arithmatex"><span class="MathJax_Preview">p_{model}</span><script type="math/tex">p_{model}</script></span> 与该任务的真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 一致。</p>
+<p>问题在于该任务的真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 是无法获取到的，能够获取到的是训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span>，我们一般认为训练数据是从总体中独立同分布采样出来的，基于该条件下，就可以认为训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 与真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 是一致的。这样机器学习的目标就是：希望模型学到的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span> 与训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 一致。</p>
+<p>然后剩余的问题就是如何评估两个分布是否一致？答案是使用KL散度进行评估。因为KL散度的定义就是衡量两个概率分布 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">q</span><script type="math/tex">q</script></span> 的差异。</p>
+<p>两个分布越相近，KL散度越小；两个分布的差异越大，KL散度也越大；当两个分布相同时，KL散度为0。</p>
+<h2 id="kl_2">三、熵、KL散度、交叉熵</h2>
+<p>先对这三个概念给出一个通俗但不严谨的描述：</p>
+<ul>
+<li>熵：可以表示一个事件 A 的自信息量，即 A 包含多少信息；</li>
+<li>KL散度：可以表示从事件 A 的角度看，事件 B 有多大的不同；</li>
+<li>交叉熵：可以表示从事件 A 的角度看，如何描述事件 B；</li>
+</ul>
+<p>下面使用数据公示给出这三个概念的严谨的表示：</p>
+<p><strong>熵：</strong></p>
+<div class="arithmatex">
+<div class="MathJax_Preview">H(p) = - \sum_i p_i \log p_i</div>
+<script type="math/tex; mode=display">H(p) = - \sum_i p_i \log p_i</script>
+</div>
+<p><strong>KL散度：</strong></p>
+<div class="arithmatex">
+<div class="MathJax_Preview">D_{KL}(p||q) = \sum_i p_i \log \frac{p_i}{q_i} = \sum_i p_i \log p_i - \sum_i p_i \log q_i</div>
+<script type="math/tex; mode=display">D_{KL}(p||q) = \sum_i p_i \log \frac{p_i}{q_i} = \sum_i p_i \log p_i - \sum_i p_i \log q_i</script>
+</div>
+<p><strong>交叉熵：</strong></p>
+<div class="arithmatex">
+<div class="MathJax_Preview">H(p||q) = - \sum_i p_i \log q_i</div>
+<script type="math/tex; mode=display">H(p||q) = - \sum_i p_i \log q_i</script>
+</div>
+<blockquote>
+<p>注意熵和交叉熵公式中都带有一个负号，而KL散度的公式中并没有负号；</p>
+</blockquote>
+<p>分析一下上面的KL散度的公式，左侧项 <span class="arithmatex"><span class="MathJax_Preview">\sum_i p_i \log p_i</span><script type="math/tex">\sum_i p_i \log p_i</script></span> 很像是熵的公式，即 <span class="arithmatex"><span class="MathJax_Preview">-H(p)</span><script type="math/tex">-H(p)</script></span>；右侧项 <span class="arithmatex"><span class="MathJax_Preview">-\sum_i p_i \log q_i</span><script type="math/tex">-\sum_i p_i \log q_i</script></span> 就是交叉熵的公式，即 <span class="arithmatex"><span class="MathJax_Preview">H(p||q)</span><script type="math/tex">H(p||q)</script></span>；所以会推导出如下公式：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">D_{KL}(p||q) = H(p||q) - H(p)</div>
+<script type="math/tex; mode=display">D_{KL}(p||q) = H(p||q) - H(p)</script>
+</div>
+<p>即从公式上来说：KL散度等于交叉熵减熵。</p>
+<h2 id="kl_3">四、机器学习中为什么多用交叉熵而不是KL散度</h2>
+<p>在第二部分的描述中已经很清晰的提到：机器学习就是将模型分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span> 学到与训练集分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 一致的过程。而衡量两个分布是否一致最直接的评估方式就是KL散度，那么为什么机器学习中常用交叉熵而不是KL散度？</p>
+<p>在第三部分的最后推导出了一个公式，再次记录如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}   
+D_{KL}(p||q) &amp;= \sum_i p_i \log \frac{p_i}{q_i} \\
+&amp;= \big[ -\sum_i p_i \log q_i \big] - \big[ -\sum_i p_i \log p_i \big] \\
+&amp;= H(p||q) - H(p)
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}   
+D_{KL}(p||q) &= \sum_i p_i \log \frac{p_i}{q_i} \\
+&= \big[ -\sum_i p_i \log q_i \big] - \big[ -\sum_i p_i \log p_i \big] \\
+&= H(p||q) - H(p)
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>将上述公式放到机器学习这个具体应用场景中，公式中的概率分布 <span class="arithmatex"><span class="MathJax_Preview">q</span><script type="math/tex">q</script></span> 就是需要学习才能得到的模型分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span>，公式中的概率分布 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 就是训练集分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span>。</p>
+<p>我们知道在机器学习中，训练集是固定的，所以训练集的熵 <span class="arithmatex"><span class="MathJax_Preview">H(p)</span><script type="math/tex">H(p)</script></span> 也是固定的，不随着模型的优化过程而变化。即在机器学习这个应用场景下 <span class="arithmatex"><span class="MathJax_Preview">H(p)</span><script type="math/tex">H(p)</script></span> 是常数。此时使用 <span class="arithmatex"><span class="MathJax_Preview">D_{KL}(p||q)</span><script type="math/tex">D_{KL}(p||q)</script></span> 对模型优化与使用 <span class="arithmatex"><span class="MathJax_Preview">H(p||q)</span><script type="math/tex">H(p||q)</script></span> 对模型优化是等价的。由于使用交叉熵 <span class="arithmatex"><span class="MathJax_Preview">H(p||q)</span><script type="math/tex">H(p||q)</script></span> 时还能少计算一项，节省计算资源，所以机器学习中一般较多情况使用交叉熵。</p>
+<h2 id="kl_4">五、KL散度的性质</h2>
+<p>最后记录一下KL散度的两个数学性质：</p>
+<ul>
+<li>
+<p><strong>正定性</strong>：<span class="arithmatex"><span class="MathJax_Preview">D_{KL}(p||q) \geqslant 0</span><script type="math/tex">D_{KL}(p||q) \geqslant 0</script></span></p>
+</li>
+<li>
+<p><strong>不对称性</strong>：<span class="arithmatex"><span class="MathJax_Preview">D_{KL}(p||q) != D_{KL}(q||p)</span><script type="math/tex">D_{KL}(p||q) != D_{KL}(q||p)</script></span></p>
+</li>
+</ul>
+<p>由于KL散度不具有<strong>对称性</strong>，所以KL散度不是一种距离（度量）。</p>
+<blockquote>
+<p>一般来说距离（度量）要满足3个条件：正定性、对称性、三角不等式；</p>
+</blockquote>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>
+<p><a href="https://blog.csdn.net/qq_40406773/article/details/80630280">https://blog.csdn.net/qq_40406773/article/details/80630280</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/39682125">https://zhuanlan.zhihu.com/p/39682125</a></p>
+</li>
+<li>
+<p><a href="https://hsinjhao.github.io/2019/05/22/KL-DivergenceIntroduction/">https://hsinjhao.github.io/2019/05/22/KL-DivergenceIntroduction/</a></p>
+</li>
+<li>
+<p><a href="https://www.zhihu.com/question/336677048">https://www.zhihu.com/question/336677048</a></p>
+</li>
+<li>
+<p><a href="https://www.zhihu.com/question/65288314/answer/244557337">https://www.zhihu.com/question/65288314/answer/244557337</a></p>
+</li>
+</ul></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../layer_normalize_markdown/" title="Layer_Norm"><span>Previous</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

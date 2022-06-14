@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="mingchao.wang">
-    <link rel="shortcut icon" href="../../img/favicon.ico">
-    <title>Batch_Norm &mdash; AI笔记</title>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Batch_Norm &mdash; 王明超AI笔记</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
-    <link rel="stylesheet" href="../../css/theme.css">
+    <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-    <link rel="stylesheet" href="../../css/extra.css">
+    <link rel="stylesheet" href="../css/extra.css">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
@@ -31,11 +31,11 @@
             <div class="home">
                 <div class="title">
                     <button class="hamburger"></button>
-                    <a href="../.." class="site-name"> AI笔记</a>
+                    <a href=".." class="site-name"> 王明超AI笔记</a>
                 </div>
                 <div class="search">
                     <div role="search">
-    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
         <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
     </form>
 </div>
@@ -43,30 +43,25 @@
             </div>
             <nav class="nav">
                 <ul class="root">
-                    <li class="toctree-l1"><a class="nav-item" href="../..">Home</a></li>
-                    <li class="toctree-l1"><button class="section nav-item">NLP工程</button>
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">Batch_Norm</a>
 <ul class="subnav">
-    <li class="toctree-l2"><a class="nav-item" href="../../NLP%E5%B7%A5%E7%A8%8B/sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#1bn">1、BN具体的操作步骤</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#2bn">2、BN是为了解决什么问题</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#3bn">3、在BN出现前，是如何解决上述问题的</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#4bn">4、BN的作用与优势</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#reference">Reference</a></li>
 </ul></li>
-                    <li class="toctree-l1"><button class="section nav-item">NLP算法</button>
-<ul class="subnav">
-    <li class="toctree-l2 current"><a class="nav-item current" href="./">Batch_Norm</a>
-<ul class="subnav">
-<li class="toctree-l3"><a class="nav-item toc" href="#1bn">1、BN具体的操作步骤</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#2bn">2、BN是为了解决什么问题</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#3bn">3、在BN出现前，是如何解决上述问题的</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#4bn">4、BN的作用与优势</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#reference">Reference</a></li>
-</ul></li>
-    <li class="toctree-l2"><a class="nav-item" href="../layer_normalize_markdown/">Layer_Norm</a></li>
-</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../layer_normalize_markdown/">Layer_Norm</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../KL%E6%95%A3%E5%BA%A6_markdown/">KL散度</a></li>
                 </ul>
             </nav>
             <div class="repo">
     <div class="link">
         <a href="https://github.com/wmc1992/biji_ai" class="fa fa-github"> GitHub</a>
     </div>
-    <div class="previous"><a href="../../NLP%E5%B7%A5%E7%A8%8B/sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">&laquo; Previous</a></div>
+    <div class="previous"><a href="../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">&laquo; Previous</a></div>
     <div class="next"><a href="../layer_normalize_markdown/">Next &raquo;</a></div>
 </div>
         </aside>
@@ -74,12 +69,12 @@
         <main>
             <div class="home-top">
                 <button class="hamburger"></button>
-                <a href="../.." class="site-name"> AI笔记</a>
+                <a href=".." class="site-name"> 王明超AI笔记</a>
             </div>
             <div id="main">
                 <nav class="breadcrumbs">
 <ul>
-    <li>NLP算法</li>
+    
 </ul>
 </nav>
                 <div id="content"><h1 id="batch-normalize">Batch Normalize</h1>
@@ -153,7 +148,7 @@
 <p><a href="https://www.zhihu.com/question/487766088">https://www.zhihu.com/question/487766088</a></p></div>
                 <footer>
     <div class="footer-buttons">
-        <div class="previous"><a href="../../NLP%E5%B7%A5%E7%A8%8B/sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/" title="sklearn计算不平衡数据的权重"><span>Previous</span></a></div>
+        <div class="previous"><a href="../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/" title="sklearn计算不平衡数据的权重"><span>Previous</span></a></div>
         <div class="next"><a href="../layer_normalize_markdown/" title="Layer_Norm"><span>Next</span></a></div>
     </div>
     <div class="footer-note">
@@ -166,11 +161,11 @@
             </div>
         </main>
     </div>
-    <script>var base_url = '../..';</script>
-    <script src="../../js/theme.js"></script>
-    <script src="../../mathjax-config.js"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../mathjax-config.js"></script>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="../../search/main.js"></script>
+    <script src="../search/main.js"></script>
 </body>
 
 </html>
