@@ -1,4 +1,4 @@
-site_name: AI笔记
+site_name: 王明超AI笔记
 site_url: https://mingchao.wang/biji_ai/
 site_description: 王明超AI笔记
 site_author: mingchao.wang
@@ -21,11 +21,10 @@ theme:
 
 nav:
     - "Home": "index.md"
-    - "NLP工程":
-        - "sklearn计算不平衡数据的权重": "NLP工程/sklearn计算不平衡数据的权重.md"
-    - "NLP算法":
-        - "Batch_Norm": "NLP算法/batch_normalize_markdown.md"
-        - "Layer_Norm": "NLP算法/layer_normalize_markdown.md"
+    - "sklearn计算不平衡数据的权重": "sklearn计算不平衡数据的权重.md"
+    - "Batch_Norm": "batch_normalize_markdown.md"
+    - "Layer_Norm": "layer_normalize_markdown.md"
+    - "KL散度": "KL散度_markdown.md"
 
 extra_css:
     - css/extra.css
