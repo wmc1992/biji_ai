@@ -49,11 +49,11 @@
                     <li class="toctree-l1"><a class="nav-item" href="../layer_normalize_markdown/">Layer_Norm</a></li>
                     <li class="toctree-l1 current"><a class="nav-item current" href="./">KL散度</a>
 <ul class="subnav">
-<li class="toctree-l2"><a class="nav-item toc" href="#_1">一、定义</a></li>
-<li class="toctree-l2"><a class="nav-item toc" href="#kl_1">二、在机器学习中KL散度的作用</a></li>
-<li class="toctree-l2"><a class="nav-item toc" href="#kl_2">三、熵、KL散度、交叉熵</a></li>
-<li class="toctree-l2"><a class="nav-item toc" href="#kl_3">四、机器学习中为什么多用交叉熵而不是KL散度</a></li>
-<li class="toctree-l2"><a class="nav-item toc" href="#kl_4">五、KL散度的性质</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#1">1、定义</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#2kl">2、在机器学习中KL散度的作用</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#3kl">3、熵、KL散度、交叉熵</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#4kl">4、机器学习中为什么多用交叉熵而不是KL散度</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#5kl">5、KL散度的性质</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#reference">Reference</a></li>
 </ul></li>
                 </ul>
@@ -78,7 +78,7 @@
 </ul>
 </nav>
                 <div id="content"><h1 id="kl">KL散度</h1>
-<h2 id="_1">一、定义</h2>
+<h2 id="1">1、定义</h2>
 <p>KL散度是一种衡量两个概率分布 P 和 Q 的差异的方法；</p>
 <p>对于连续随机变量的概率分布来说，KL散度公式为：</p>
 <div class="arithmatex">
@@ -91,12 +91,12 @@
 <script type="math/tex; mode=display">D_{KL}(p||q) = \sum_x p(x) \log \frac{p(x)}{q(x)}</script>
 </div>
 <p>机器学习和深度学习中使用的都是离散随机变量的概率分布，下面将仅讨论离散情况下的KL散度。</p>
-<h2 id="kl_1">二、在机器学习中KL散度的作用</h2>
+<h2 id="2kl">2、在机器学习中KL散度的作用</h2>
 <p>机器学习的目标就是：希望模型学到的分布 <span class="arithmatex"><span class="MathJax_Preview">p_{model}</span><script type="math/tex">p_{model}</script></span> 与该任务的真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 一致。</p>
 <p>问题在于该任务的真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 是无法获取到的，能够获取到的是训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span>，我们一般认为训练数据是从总体中独立同分布采样出来的，基于该条件下，就可以认为训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 与真实分布 <span class="arithmatex"><span class="MathJax_Preview">P_{real}</span><script type="math/tex">P_{real}</script></span> 是一致的。这样机器学习的目标就是：希望模型学到的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span> 与训练集的分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 一致。</p>
 <p>然后剩余的问题就是如何评估两个分布是否一致？答案是使用KL散度进行评估。因为KL散度的定义就是衡量两个概率分布 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">q</span><script type="math/tex">q</script></span> 的差异。</p>
 <p>两个分布越相近，KL散度越小；两个分布的差异越大，KL散度也越大；当两个分布相同时，KL散度为0。</p>
-<h2 id="kl_2">三、熵、KL散度、交叉熵</h2>
+<h2 id="3kl">3、熵、KL散度、交叉熵</h2>
 <p>先对这三个概念给出一个通俗但不严谨的描述：</p>
 <ul>
 <li>熵：可以表示一个事件 A 的自信息量，即 A 包含多少信息；</li>
@@ -128,7 +128,7 @@
 <script type="math/tex; mode=display">D_{KL}(p||q) = H(p||q) - H(p)</script>
 </div>
 <p>即从公式上来说：KL散度等于交叉熵减熵。</p>
-<h2 id="kl_3">四、机器学习中为什么多用交叉熵而不是KL散度</h2>
+<h2 id="4kl">4、机器学习中为什么多用交叉熵而不是KL散度</h2>
 <p>在第二部分的描述中已经很清晰的提到：机器学习就是将模型分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span> 学到与训练集分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span> 一致的过程。而衡量两个分布是否一致最直接的评估方式就是KL散度，那么为什么机器学习中常用交叉熵而不是KL散度？</p>
 <p>在第三部分的最后推导出了一个公式，再次记录如下：</p>
 <div class="arithmatex">
@@ -153,7 +153,7 @@ D_{KL}(p||q) &= \sum_i p_i \log \frac{p_i}{q_i} \\
 </div>
 <p>将上述公式放到机器学习这个具体应用场景中，公式中的概率分布 <span class="arithmatex"><span class="MathJax_Preview">q</span><script type="math/tex">q</script></span> 就是需要学习才能得到的模型分布 <span class="arithmatex"><span class="MathJax_Preview">P_{model}</span><script type="math/tex">P_{model}</script></span>，公式中的概率分布 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 就是训练集分布 <span class="arithmatex"><span class="MathJax_Preview">P_{train}</span><script type="math/tex">P_{train}</script></span>。</p>
 <p>我们知道在机器学习中，训练集是固定的，所以训练集的熵 <span class="arithmatex"><span class="MathJax_Preview">H(p)</span><script type="math/tex">H(p)</script></span> 也是固定的，不随着模型的优化过程而变化。即在机器学习这个应用场景下 <span class="arithmatex"><span class="MathJax_Preview">H(p)</span><script type="math/tex">H(p)</script></span> 是常数。此时使用 <span class="arithmatex"><span class="MathJax_Preview">D_{KL}(p||q)</span><script type="math/tex">D_{KL}(p||q)</script></span> 对模型优化与使用 <span class="arithmatex"><span class="MathJax_Preview">H(p||q)</span><script type="math/tex">H(p||q)</script></span> 对模型优化是等价的。由于使用交叉熵 <span class="arithmatex"><span class="MathJax_Preview">H(p||q)</span><script type="math/tex">H(p||q)</script></span> 时还能少计算一项，节省计算资源，所以机器学习中一般较多情况使用交叉熵。</p>
-<h2 id="kl_4">五、KL散度的性质</h2>
+<h2 id="5kl">5、KL散度的性质</h2>
 <p>最后记录一下KL散度的两个数学性质：</p>
 <ul>
 <li>
