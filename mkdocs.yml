@@ -9,8 +9,14 @@ edit_uri: ""
 theme:
     # name: mkdocs
     # name: readthedocs
-    name: ivory
+    # name: ivory
     # name: rtd-dropdown
+    # name: gitbook
+    # name: bootstrap
+    # name: 'rtd-dropdown'
+    # name: material
+    name: null
+    custom_dir: 'cinder'
     locale: en
     analytics: {gtag: 'G-274394082'}
     highlightjs: true
@@ -21,10 +27,12 @@ theme:
 
 nav:
     - "Home": "index.md"
-    - "sklearn计算不平衡数据的权重": "sklearn计算不平衡数据的权重.md"
-    - "Batch_Norm": "batch_normalize_markdown.md"
-    - "Layer_Norm": "layer_normalize_markdown.md"
-    - "KL散度": "KL散度_markdown.md"
+    - "算法":
+        - "sklearn计算不平衡数据的权重": "sklearn计算不平衡数据的权重.md"
+        - "Batch_Norm": "batch_normalize_markdown.md"
+        - "Layer_Norm": "layer_normalize_markdown.md"
+        - "KL散度": "KL散度_markdown.md"
+        - "线性回归": "线性回归_markdown.md"
 
 extra_css:
     - css/extra.css

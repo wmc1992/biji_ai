@@ -7,3 +7,5 @@
 * [Layer Norm](./layer_normalize_markdown/)
 
 * [KL散度](./KL散度_markdown/)
+
+* [线性回归](./线性回归_markdown/)
