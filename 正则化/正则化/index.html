@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="王明超AI笔记">
+    <meta name="author" content="mingchao.wang">
+    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E6%AD%A3%E5%88%99%E5%8C%96/%E6%AD%A3%E5%88%99%E5%8C%96/">
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>正则化 - 王明超AI笔记</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+    <link href="../../css/extra.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">王明超AI笔记</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">算法 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../%E5%B8%B8%E7%94%A8%E8%B7%9D%E7%A6%BB/">常用距离</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../Jacobi%E7%9F%A9%E9%98%B5/Jacobi%E7%9F%A9%E9%98%B5/">Jacobi矩阵</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../batch_normalize_markdown/">Batch_Norm</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../layer_normalize_markdown/">Layer_Norm</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../KL%E6%95%A3%E5%BA%A6_markdown/">KL散度</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92_markdown/">线性回归</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">正则化</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../../%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92_markdown/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li class="disabled">
+                        <a rel="next" >
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/wmc1992/biji_ai"><i class="fab fa-github"></i> GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#_1">正则化</a></li>
+            <li class="second-level"><a href="#1l2">1、L2正则</a></li>
+                
+            <li class="second-level"><a href="#2l1">2、L1正则</a></li>
+                
+            <li class="second-level"><a href="#3lasso">3、Lasso回归与岭回归</a></li>
+                
+                <li class="third-level"><a href="#31-lasso">3.1 Lasso回归与岭回归的定义</a></li>
+                <li class="third-level"><a href="#32-l1">3.2 L1为何能做特征筛选</a></li>
+            <li class="second-level"><a href="#4l2">4、带有L2正则的目标函数的求解</a></li>
+                
+                <li class="third-level"><a href="#41">4.1 公式</a></li>
+                <li class="third-level"><a href="#41-pytorchl2">4.1 Pytorch中L2的实现</a></li>
+            <li class="second-level"><a href="#5l1">5、带有L1正则的目标函数的求解</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-8" role="main">
+
+<h1 id="_1">正则化</h1>
+<blockquote>
+<p>说明：在该篇文章中所有的推导都忽略了偏置项 bias；</p>
+</blockquote>
+<h2 id="1l2">1、L2正则</h2>
+<p>正则化项为 <span class="arithmatex"><span class="MathJax_Preview">\Omega (\theta) = \frac{1}{2}||\theta||^2_2</span><script type="math/tex">\Omega (\theta) = \frac{1}{2}||\theta||^2_2</script></span>，系数 <span class="arithmatex"><span class="MathJax_Preview">\frac{1}{2}</span><script type="math/tex">\frac{1}{2}</script></span> 是为了求导时得到的系数为 <span class="arithmatex"><span class="MathJax_Preview">1</span><script type="math/tex">1</script></span>；</p>
+<p><span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化能够使参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的方差更接近0；</p>
+<p>目标函数：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}J(\theta)=L(\theta)+ \alpha \Omega(\theta) = L(\theta) + \frac{1}{2}\alpha ||\theta||^2_2\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}J(\theta)=L(\theta)+ \alpha \Omega(\theta) = L(\theta) + \frac{1}{2}\alpha ||\theta||^2_2\end{equation}</script>
+</div>
+<p>梯度为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\nabla_{\theta} J(\theta) = \nabla_{\theta} L(\theta) + \alpha \theta\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\nabla_{\theta} J(\theta) = \nabla_{\theta} L(\theta) + \alpha \theta\end{equation}</script>
+</div>
+<p>梯度下降过程如下，这里的 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 为学习率：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma (\nabla_{\theta} L(\theta) + \alpha \theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma (\nabla_{\theta} L(\theta) + \alpha \theta)\end{equation}</script>
+</div>
+<p>对上述梯度下降过程整理一下得：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow (1-\gamma \alpha)\theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow (1-\gamma \alpha)\theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</script>
+</div>
+<p>在不使用 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化的情况下，梯度下降的公式为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</script>
+</div>
+<p>对比公式<span class="arithmatex"><span class="MathJax_Preview">(4)</span><script type="math/tex">(4)</script></span>和公式<span class="arithmatex"><span class="MathJax_Preview">(5)</span><script type="math/tex">(5)</script></span>可知，<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>正则化对梯度更新的影响是：每一步执行更新前，会对权重向量乘以一个常数因子来收缩权重向量，使参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的方差更接近0，因此<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>也被称为<strong>权重衰减</strong>；</p>
+<h2 id="2l1">2、L1正则</h2>
+<p>正则化项为 <span class="arithmatex"><span class="MathJax_Preview">\Omega(\theta) = ||\theta||_1 = \sum_{i=1}^d |\theta_i|</span><script type="math/tex">\Omega(\theta) = ||\theta||_1 = \sum_{i=1}^d |\theta_i|</script></span>，即各个参数的绝对值之和；</p>
+<p>目标函数：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}J(\theta)=L(\theta)+\Omega(\theta)=L(\theta)+\alpha ||\theta||_1\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}J(\theta)=L(\theta)+\Omega(\theta)=L(\theta)+\alpha ||\theta||_1\end{equation}</script>
+</div>
+<p>梯度：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\nabla_{\theta} J(\theta)=\nabla_{\theta} L(\theta) + \alpha \cdot \text{sign}(\theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\nabla_{\theta} J(\theta)=\nabla_{\theta} L(\theta) + \alpha \cdot \text{sign}(\theta)\end{equation}</script>
+</div>
+<p>其中 <span class="arithmatex"><span class="MathJax_Preview">\text{sign}(\cdot)</span><script type="math/tex">\text{sign}(\cdot)</script></span> 表示取自变量的符号；</p>
+<p>梯度下降过程如下，这里的 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 为学习率：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma \cdot(\nabla_{\theta} L(\theta) + \alpha \cdot \text{sign}(\theta))\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \cdot(\nabla_{\theta} L(\theta) + \alpha \cdot \text{sign}(\theta))\end{equation}</script>
+</div>
+<p>对上述梯度下降过程整理一下得：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow (\theta - \gamma \cdot \alpha \cdot \text{sign}(\theta)) - \gamma \cdot \nabla_{\theta}L(\theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow (\theta - \gamma \cdot \alpha \cdot \text{sign}(\theta)) - \gamma \cdot \nabla_{\theta}L(\theta)\end{equation}</script>
+</div>
+<p>在不使用 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则化的情况下，梯度下降的公式为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</script>
+</div>
+<p>对比公式<span class="arithmatex"><span class="MathJax_Preview">(9)</span><script type="math/tex">(9)</script></span>和公式<span class="arithmatex"><span class="MathJax_Preview">(10)</span><script type="math/tex">(10)</script></span>可知:</p>
+<ul>
+<li>
+<p>上面讨论过 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化对梯度更新的影响是：给每个权重值乘上一个常数因子，线性的缩放每个权重值；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span>正则化对梯度更新的影响是：给每个权重值减去一个与 <span class="arithmatex"><span class="MathJax_Preview">\text{sign}(\theta_i)</span><script type="math/tex">\text{sign}(\theta_i)</script></span> 同符号的常数因子；</p>
+</li>
+</ul>
+<blockquote>
+<p>特别说明：对于带有 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则的目标函数，由于其不是处处可导，所以一般不使用梯度下降法进行求解，这里只是和 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则做一个类似的讨论。在本文的最后一部分会介绍坐标下降法，是更常用的用于求解带有 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则的目标函数的方法；</p>
+</blockquote>
+<h2 id="3lasso">3、Lasso回归与岭回归</h2>
+<h3 id="31-lasso">3.1 Lasso回归与岭回归的定义</h3>
+<p>在线性回归的目标函数上添加上 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 或 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化项，则可以得到Lasso回归和岭回归，其公式如下：</p>
+<p>Lasso回归：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}J(\theta)=L(\theta)+ \alpha ||\theta||_1 =\frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \alpha ||\theta||_1\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}J(\theta)=L(\theta)+ \alpha ||\theta||_1 =\frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \alpha ||\theta||_1\end{equation}</script>
+</div>
+<p>岭回归：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}J(\theta)=L(\theta)+ \alpha \cdot \frac{1}{2} ||\theta||_2^2= \frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \alpha \cdot \frac{1}{2} ||\theta||_2^2\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}J(\theta)=L(\theta)+ \alpha \cdot \frac{1}{2} ||\theta||_2^2= \frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \alpha \cdot \frac{1}{2} ||\theta||_2^2\end{equation}</script>
+</div>
+<h3 id="32-l1">3.2 L1为何能做特征筛选</h3>
+<p>关于 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 有一个常见的结论是：</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span>：能够使权重值中的一些特征趋于0，因此可以用来做特征筛选；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>：能够使权重值中的所有特征的方差趋于0；</li>
+</ul>
+<p>这一部分讨论一下为什么 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 能够使权重值中的一些特征趋于0；</p>
+<p>Lasso回归与岭回归的目标函数都是拉格朗日格式，其中 <span class="arithmatex"><span class="MathJax_Preview">\alpha</span><script type="math/tex">\alpha</script></span> 是KKT乘子，所以可以将其改写为带有约束条件的最优化问题。</p>
+<p>Lasso回归：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}
+&amp; \min_{\theta} \frac{1}{2} \sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 \\
+&amp; s.t. \quad ||\theta||_1 \leqslant t
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+& \min_{\theta} \frac{1}{2} \sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 \\
+& s.t. \quad ||\theta||_1 \leqslant t
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>岭回归：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}
+&amp; \min_{\theta} \frac{1}{2} \sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 \\
+&amp; s.t. \quad \frac{1}{2}||\theta||_2^2 \leqslant t
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+& \min_{\theta} \frac{1}{2} \sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 \\
+& s.t. \quad \frac{1}{2}||\theta||_2^2 \leqslant t
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>其中 <span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 表示正则化的力度，<span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 越小，正则化力度越大，也对应原目标函数中的 <span class="arithmatex"><span class="MathJax_Preview">\alpha</span><script type="math/tex">\alpha</script></span> 越大。</p>
+<p>下面通过画图来理解。</p>
+<p><img alt="" src="../assets/01.png" /></p>
+<p>如上图所示，Lasso回归（即公式<span class="arithmatex"><span class="MathJax_Preview">(13)</span><script type="math/tex">(13)</script></span>）的约束条件为左图中灰色的方形区域；岭回归（即公式<span class="arithmatex"><span class="MathJax_Preview">(14)</span><script type="math/tex">(14)</script></span>）的约束条件为右图中灰色的圆形区域；两图中右上方的椭圆线为损失函数 <span class="arithmatex"><span class="MathJax_Preview">L(\theta)</span><script type="math/tex">L(\theta)</script></span> 的等高线，损失函数 <span class="arithmatex"><span class="MathJax_Preview">L(\theta)</span><script type="math/tex">L(\theta)</script></span> 在椭圆的中心处取得最小值。</p>
+<p>既要满足方形/圆形的灰色区域的约束，又要尽量取最小值，可知上述两个带约束的最优化问题的最优解都在：等高线与约束区域边界的交点处；即两个红色箭头所指的交点处。</p>
+<p>由于 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则对应的约束区域是方形的，椭圆形的等高线与方形区域边界的交点更容易出现在该方形区域的顶点上，也就是坐标轴上。而这些坐标轴上的点仅当前坐标轴对应的维度非0，其他维度取值都为0。所以相比于 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>，<span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span>更适合做特征选择。</p>
+<h2 id="4l2">4、带有L2正则的目标函数的求解</h2>
+<h3 id="41">4.1 公式</h3>
+<p>由于 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则本身连续且处处可微，所以直接使用梯度下降法即可进行求解。</p>
+<p>在第一部分的讨论中，已经求得了带有 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则的目标函数的梯度下降过程公式：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma \cdot (\nabla_{\theta} L(\theta) + \alpha \theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \cdot (\nabla_{\theta} L(\theta) + \alpha \theta)\end{equation}</script>
+</div>
+<p>这个公式很简单，下面看一下在Pytorch中是如何实现<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>正则的功能的。</p>
+<h3 id="41-pytorchl2">4.1 Pytorch中L2的实现</h3>
+<h4 id="411">4.1.1 调用方式</h4>
+<p>在 pytorch 中L2正则是通过 weight decay 在优化器中实现的，只需要在初始化优化器时指定哪些参数需要L2正则，哪些参数不需要L2正则即可。如下所示：</p>
+<pre><code class="language-python">weight_decay = 0.01
+learning_rate = 0.00005
+
+no_decay = [&quot;bias&quot;, &quot;LayerNorm.weight&quot;]
+optimizer_grouped_parameters = [
+    {
+        &quot;params&quot;: [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
+        &quot;weight_decay&quot;: weight_decay,
+    },
+    {
+        &quot;params&quot;: [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)],
+        &quot;weight_decay&quot;: 0.0,
+    },
+]
+optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
+</code></pre>
+<h4 id="412">4.1.2 源码</h4>
+<p>以最简单的SGD优化器来看一下L2正则在优化器中具体是如何实现的：</p>
+<pre><code class="language-python">class SGD(Optimizer):
+
+    def step(self,):
+        for group in self.param_groups:
+            lr = group[&quot;lr&quot;]  # 学习率
+            weight_decay = group[&quot;weight_decay&quot;]  # weight decay
+
+            for p in group[&quot;params&quot;]:
+                if p.grad is None:  # 如果当前参数梯度为None，则不需要更新
+                    continue
+                d_p = p.grad  # 梯度
+
+                if weight_decay != 0:
+                    # 在原梯度的基础上加上 (weight_decay * 权重)
+                    d_p.add_(weight_decay, p.data)  
+
+                # 将（梯度 * -学习率）更新到权重参数上；当 weight_decay 不等
+                # 于0时，这里的梯度 d_p 已经加上了(weight_decay * 权重)
+                p.data.add_(-lr, d_p)  
+</code></pre>
+<p>再放一下梯度下降过程的公式，对着公式来看代码：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\theta \leftarrow \theta - \gamma \cdot (\nabla_{\theta} L(\theta) + \alpha \cdot \theta)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \cdot (\nabla_{\theta} L(\theta) + \alpha \cdot \theta)\end{equation}</script>
+</div>
+<ul>
+<li>
+<p>公式中的 <span class="arithmatex"><span class="MathJax_Preview">\alpha</span><script type="math/tex">\alpha</script></span> 对应代码中的 <code>weight_decay</code>；</p>
+</li>
+<li>
+<p>公式中的 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 对应代码中的 <code>lr</code>；</p>
+</li>
+</ul>
+<p>代码中的注释很详细，不再赘述。</p>
+<h2 id="5l1">5、带有L1正则的目标函数的求解</h2>
+<p>待续</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Copyright &copy; 2021 Microsoft Research</small><br>
+            
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/yaml.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/django.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/python.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
