@@ -82,6 +82,18 @@
                         
                             
 <li >
+    <a href="../%E5%B8%B8%E7%94%A8%E8%B7%9D%E7%A6%BB/">常用距离</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../Jacobi%E7%9F%A9%E9%98%B5/Jacobi%E7%9F%A9%E9%98%B5/">Jacobi矩阵</a>
+</li>
+
+                        
+                            
+<li >
     <a href="../sklearn%E8%AE%A1%E7%AE%97%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9D%83%E9%87%8D/">sklearn计算不平衡数据的权重</a>
 </li>
 
@@ -152,11 +164,12 @@
                 
             <li class="second-level"><a href="#3">3、代价函数</a></li>
                 
-            <li class="second-level"><a href="#4">4、求解梯度</a></li>
+            <li class="second-level"><a href="#4">4、梯度下降求解</a></li>
                 
-            <li class="second-level"><a href="#5">5、梯度下降</a></li>
-                
-            <li class="second-level"><a href="#6">6、随机梯度下降</a></li>
+                <li class="third-level"><a href="#41">4.1求解梯度</a></li>
+                <li class="third-level"><a href="#42">4.2 梯度下降</a></li>
+                <li class="third-level"><a href="#43">4.3 随机梯度下降</a></li>
+            <li class="second-level"><a href="#5">5、直接求解析解</a></li>
                 
     </ul>
 </div></div>
@@ -202,7 +215,8 @@ h_ \theta (\overrightarrow{x^{(i)}}) &= \theta_0 + \theta_1 x_1^{(i)} + \theta_2
 <div class="MathJax_Preview">J(\theta) = \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2</div>
 <script type="math/tex; mode=display">J(\theta) = \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2</script>
 </div>
-<h2 id="4">4、求解梯度</h2>
+<h2 id="4">4、梯度下降求解</h2>
+<h3 id="41">4.1求解梯度</h3>
 <div class="arithmatex">
 <div class="MathJax_Preview">
 \begin{equation}
@@ -223,7 +237,7 @@ h_ \theta (\overrightarrow{x^{(i)}}) &= \theta_0 + \theta_1 x_1^{(i)} + \theta_2
 \end{equation}
 </script>
 </div>
-<h2 id="5">5、梯度下降</h2>
+<h3 id="42">4.2 梯度下降</h3>
 <p>对于权重 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 每次迭代更新的公式为：</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">
@@ -243,13 +257,14 @@ h_ \theta (\overrightarrow{x^{(i)}}) &= \theta_0 + \theta_1 x_1^{(i)} + \theta_2
 \end{equation}
 </script>
 </div>
-<p>其中 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 为学习率；</p>
-<h2 id="6">6、随机梯度下降</h2>
+<p>其中 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 为学习率；符号 <span class="arithmatex"><span class="MathJax_Preview">:=</span><script type="math/tex">:=</script></span> 表示赋值运算符；</p>
+<h3 id="43">4.3 随机梯度下降</h3>
 <p>在梯度下降中，每次对 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 的更新都是求解出 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 条数据在 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 上的所有梯度之后再进行更新。如果每条数据求解出梯度之后都对 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 更新一次，则为随机梯度下降，公式如下：</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">\theta_j := \theta_j - \gamma (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j</div>
 <script type="math/tex; mode=display">\theta_j := \theta_j - \gamma (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j</script>
-</div></div>
+</div>
+<h2 id="5">5、直接求解析解</h2></div>
         
         
     </div>
