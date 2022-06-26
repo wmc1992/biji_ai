@@ -39,7 +39,9 @@ $$\hat{y}^{(i)}=h_ \theta (\overrightarrow{x^{(i)}})$$
 
 $$J(\theta) = \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2$$
 
-## 4、求解梯度
+## 4、梯度下降求解
+
+### 4.1求解梯度
 
 $$
 \begin{equation}
@@ -51,7 +53,7 @@ $$
 \end{equation}
 $$
 
-## 5、梯度下降
+### 4.2 梯度下降
 
 对于权重 $\theta_j$ 每次迭代更新的公式为：
 
@@ -66,8 +68,10 @@ $$
 
 其中 $\gamma$ 为学习率；符号 $:=$ 表示赋值运算符；
 
-## 6、随机梯度下降
+### 4.3 随机梯度下降
 
 在梯度下降中，每次对 $\theta_j$ 的更新都是求解出 $n$ 条数据在 $\theta_j$ 上的所有梯度之后再进行更新。如果每条数据求解出梯度之后都对 $\theta_j$ 更新一次，则为随机梯度下降，公式如下：
 
 $$\theta_j := \theta_j - \gamma (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j$$
+
+## 5、直接求解析解

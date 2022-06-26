@@ -28,6 +28,8 @@ theme:
 nav:
     - "Home": "index.md"
     - "算法":
+        - "常用距离": "常用距离.md"
+        - "Jacobi矩阵": "Jacobi矩阵/Jacobi矩阵.md"
         - "sklearn计算不平衡数据的权重": "sklearn计算不平衡数据的权重.md"
         - "Batch_Norm": "batch_normalize_markdown.md"
         - "Layer_Norm": "layer_normalize_markdown.md"
