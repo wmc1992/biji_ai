@@ -35,6 +35,7 @@ nav:
         - "Layer_Norm": "layer_normalize_markdown.md"
         - "KL散度": "KL散度_markdown.md"
         - "线性回归": "线性回归_markdown.md"
+        - "正则化": "正则化/正则化.md"
 
 extra_css:
     - css/extra.css
