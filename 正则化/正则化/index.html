@@ -181,6 +181,8 @@
                 <li class="third-level"><a href="#51">5.1 优化问题</a></li>
                 <li class="third-level"><a href="#52">5.2 坐标轴下降法</a></li>
                 <li class="third-level"><a href="#53-arg-min_theta_l-jarg-min_theta_l-j">5.3 求解 \arg \min_{\theta_l} J\arg \min_{\theta_l} J</a></li>
+            <li class="second-level"><a href="#refrence">Refrence</a></li>
+                
     </ul>
 </div></div>
         <div class="col-md-8" role="main">
@@ -558,7 +560,22 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
     r_l = ... # 前面已解释了r_l可直接求得
     z_l = ... # 前面已解释了z_l可直接求得
     theta_l = max((r_l - lambda)/z_l, 0) + min((r_l + lambda)/z_l, 0) # 上面最后推导出来的分段函数（25）可以整合成这一行伪代码
-</code></pre></div>
+</code></pre>
+<h2 id="refrence">Refrence</h2>
+<ul>
+<li>
+<p><a href="http://www.huaxiaozhuan.com/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/chapters/3_regularization.html">正则化：http://www.huaxiaozhuan.com/深度学习/chapters/3_regularization.html</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/wuliytTaotao/p/10837533.html">Lasso回归和岭回归：https://www.cnblogs.com/wuliytTaotao/p/10837533.html</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/pinard/p/6018889.html">Lasso回归算法： 坐标轴下降法与最小角回归法小结：https://www.cnblogs.com/pinard/p/6018889.html</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/429541451">LASSO的坐标下降法求解：https://zhuanlan.zhihu.com/p/429541451</a></p>
+</li>
+</ul></div>
         
         
     </div>
