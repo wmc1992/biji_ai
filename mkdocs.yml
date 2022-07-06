@@ -36,6 +36,7 @@ nav:
         - "KL散度": "KL散度_markdown.md"
         - "线性回归": "线性回归_markdown.md"
         - "正则化": "正则化/正则化.md"
+        - "特征值与特征向量": "线性代数/特征值与特征向量.md"
 
 extra_css:
     - css/extra.css
