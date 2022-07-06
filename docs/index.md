@@ -6,13 +6,13 @@
 
 * [sklearn计算不平衡数据的权重](./sklearn计算不平衡数据的权重/)
 
-* [Batch Norm](./batch_normalize_markdown/)
+* [Batch Norm](./batch_normalize/)
 
-* [Layer Norm](./layer_normalize_markdown/)
+* [Layer Norm](./layer_normalize/)
 
-* [KL散度](./KL散度_markdown/)
+* [KL散度](./KL散度/)
 
-* [线性回归](./线性回归_markdown/)
+* [线性回归](./线性回归/)
 
 * [正则化](./正则化/正则化/)
 
