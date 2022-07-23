@@ -28,6 +28,8 @@ theme:
 nav:
     - "Home": "深度学习.md"
     - "深度学习": "深度学习.md"
+    - "统计学习": "统计学习.md"
+    - "其他": "其他.md"
 
 extra_css:
     - css/extra.css
