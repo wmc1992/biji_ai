@@ -1,6 +1,6 @@
-site_name: 王明超AI笔记
+site_name: 学习笔记
 site_url: https://mingchao.wang/biji_ai/
-site_description: 王明超AI笔记
+site_description: 学习笔记
 site_author: mingchao.wang
 
 repo_url: https://github.com/wmc1992/biji_ai
@@ -26,18 +26,8 @@ theme:
         - python
 
 nav:
-    - "Home": "index.md"
-    - "算法":
-        - "常用距离": "常用距离.md"
-        - "Jacobi矩阵": "Jacobi矩阵/Jacobi矩阵.md"
-        - "sklearn计算不平衡数据的权重": "sklearn计算不平衡数据的权重.md"
-        - "Batch_Norm": "batch_normalize.md"
-        - "Layer_Norm": "layer_normalize.md"
-        - "KL散度": "KL散度.md"
-        - "线性回归": "线性回归.md"
-        - "正则化": "正则化/正则化.md"
-        - "特征值与特征向量": "线性代数/特征值与特征向量.md"
-        - "微分方程": "微分方程.md"
+    - "Home": "深度学习.md"
+    - "深度学习": "深度学习.md"
 
 extra_css:
     - css/extra.css
