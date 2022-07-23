@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="王明超AI笔记">
+    <meta name="description" content="学习笔记">
     <meta name="author" content="mingchao.wang">
     <link rel="canonical" href="https://mingchao.wang/biji_ai/%E6%AD%A3%E5%88%99%E5%8C%96/%E6%AD%A3%E5%88%99%E5%8C%96/">
     <link rel="shortcut icon" href="../../img/favicon.ico">
 
     
-    <title>正则化 - 王明超AI笔记</title>
+    <title>正则化 - 学习笔记</title>
     
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -60,7 +60,7 @@
             <!-- Main title -->
 
             
-              <a class="navbar-brand" href="../..">王明超AI笔记</a>
+              <a class="navbar-brand" href="../..">学习笔记</a>
             
         </div>
 
@@ -131,6 +131,12 @@
                             
 <li >
     <a href="../../%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F/">特征值与特征向量</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/">微分方程</a>
 </li>
 
                         
@@ -444,7 +450,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 <p>终止条件：第 <span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span> 次迭代完成后，检查 <span class="arithmatex"><span class="MathJax_Preview">\theta^{(k)}</span><script type="math/tex">\theta^{(k)}</script></span> 与 <span class="arithmatex"><span class="MathJax_Preview">\theta^{(k-1)}</span><script type="math/tex">\theta^{(k-1)}</script></span> 在各个维度上的变化情况，如果各个维度的变化都足够小，那么终止迭代，<span class="arithmatex"><span class="MathJax_Preview">\theta^{(k)}</span><script type="math/tex">\theta^{(k)}</script></span> 即为最终结果；否则重复第2步，继续迭代；</p>
 </li>
 </ol>
-<p>以上就是坐标轴下降法：先随机初始化全中矩阵；然后对每个维度的参数进行优化，在优化第 <span class="arithmatex"><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span> 个维度时，将其它维度视为常量；待每个维度都优化一轮之后，检查是否可以终止：若可以终止，则优化结束，否则重复上述优化步骤；</p>
+<p>以上就是坐标轴下降法：先随机初始化权重矩阵；然后对每个维度的参数进行优化，在优化第 <span class="arithmatex"><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span> 个维度时，将其它维度视为常量；待每个维度都优化一轮之后，检查是否可以终止：若可以终止，则优化结束，否则重复上述优化步骤；</p>
 <h3 id="53-arg-min_theta_l-jarg-min_theta_l-j">5.3 求解 <span class="arithmatex"><span class="MathJax_Preview">\arg \min_{\theta_l} J</span><script type="math/tex">\arg \min_{\theta_l} J</script></span></h3>
 <p>在上一小节遗留了一个问题，就是如何求解下式，在这一小节对该式进行求解。</p>
 <div class="arithmatex">
@@ -452,7 +458,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 <script type="math/tex; mode=display">\begin{equation}\theta_l^{(k)} = \arg \min_{\theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)})\end{equation}</script>
 </div>
 <h4 id="531">5.3.1 问题描述</h4>
-<p>再次描述一个整个问题，如下：</p>
+<p>再次描述一下整个问题，如下：</p>
 <p>模型为：<span class="arithmatex"><span class="MathJax_Preview">y = h_{\theta(x)}</span><script type="math/tex">y = h_{\theta(x)}</script></span>，其中权重参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的维度为 <span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span>，即 <span class="arithmatex"><span class="MathJax_Preview">\theta = (\theta_1, \theta_2, ..., \theta_d)</span><script type="math/tex">\theta = (\theta_1, \theta_2, ..., \theta_d)</script></span></p>
 <p>目标函数为：</p>
 <div class="arithmatex">

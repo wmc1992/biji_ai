@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="学习笔记">
     <meta name="author" content="mingchao.wang">
-    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     
-    <title>线性回归 - 学习笔记</title>
+    <title>微分方程 - 学习笔记</title>
     
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -117,8 +117,8 @@
 
                         
                             
-<li class="active">
-    <a href="./">线性回归</a>
+<li >
+    <a href="../%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">线性回归</a>
 </li>
 
                         
@@ -135,8 +135,8 @@
 
                         
                             
-<li >
-    <a href="../%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/">微分方程</a>
+<li class="active">
+    <a href="./">微分方程</a>
 </li>
 
                         
@@ -153,12 +153,12 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../KL%E6%95%A3%E5%BA%A6/">
+                        <a rel="prev" href="../%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F/">
                             <i class="fas fa-arrow-left"></i> Previous
                         </a>
                     </li>
-                    <li >
-                        <a rel="next" href="../%E6%AD%A3%E5%88%99%E5%8C%96/%E6%AD%A3%E5%88%99%E5%8C%96/">
+                    <li class="disabled">
+                        <a rel="next" >
                             Next <i class="fas fa-arrow-right"></i>
                         </a>
                     </li>
@@ -175,115 +175,131 @@
         
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="first-level active"><a href="#_1">线性回归</a></li>
-            <li class="second-level"><a href="#1">1、问题描述</a></li>
+        <li class="first-level active"><a href="#_1">微分方程</a></li>
+            <li class="second-level"><a href="#1">1、举例求解微分方程</a></li>
                 
-            <li class="second-level"><a href="#2">2、建立模型</a></li>
-                
-            <li class="second-level"><a href="#3">3、代价函数</a></li>
-                
-            <li class="second-level"><a href="#4">4、梯度下降求解</a></li>
-                
-                <li class="third-level"><a href="#41">4.1求解梯度</a></li>
-                <li class="third-level"><a href="#42">4.2 梯度下降</a></li>
-                <li class="third-level"><a href="#43">4.3 随机梯度下降</a></li>
-            <li class="second-level"><a href="#5">5、直接求解析解</a></li>
-                
+                <li class="third-level"><a href="#11">1.1 雨滴下落问题</a></li>
+                <li class="third-level"><a href="#12">1.2 雨滴下落问题中速度与时间的分析</a></li>
+                <li class="third-level"><a href="#13">1.3 关于微分方程</a></li>
     </ul>
 </div></div>
         <div class="col-md-8" role="main">
 
-<h1 id="_1">线性回归</h1>
-<h2 id="1">1、问题描述</h2>
-<p>给定数据集 <span class="arithmatex"><span class="MathJax_Preview">D=\{(\overrightarrow{x^{(1)}}, y^{(1)}), (\overrightarrow{x^{(2)}}, y^{(2)}), ..., (\overrightarrow{x^{(n)}}, y^{(n)})\}</span><script type="math/tex">D=\{(\overrightarrow{x^{(1)}}, y^{(1)}), (\overrightarrow{x^{(2)}}, y^{(2)}), ..., (\overrightarrow{x^{(n)}}, y^{(n)})\}</script></span></p>
+<h1 id="_1">微分方程</h1>
+<h2 id="1">1、举例求解微分方程</h2>
+<h3 id="11">1.1 雨滴下落问题</h3>
+<p>问题：设雨滴下落收到的空气阻力与速度成正比，求初速度为零的雨滴下落速度与时间的函数关系；</p>
+<p>分析：根据题目可得出，雨滴受到的重力为：<span class="arithmatex"><span class="MathJax_Preview">mg</span><script type="math/tex">mg</script></span>，雨滴受到的空气阻力为：<span class="arithmatex"><span class="MathJax_Preview">f=kv</span><script type="math/tex">f=kv</script></span>，雨滴的加速度为：<span class="arithmatex"><span class="MathJax_Preview">a=\frac{mg-f}{m}</span><script type="math/tex">a=\frac{mg-f}{m}</script></span>；</p>
+<p>参数说明：</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 为雨滴的质量；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">g</span><script type="math/tex">g</script></span> 为重力加速度；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">f</span><script type="math/tex">f</script></span> 为雨滴收到的空气阻力；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">v</span><script type="math/tex">v</script></span> 为雨滴的速度；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">a</span><script type="math/tex">a</script></span> 为雨滴的加速度；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span> 为常数；</li>
+</ul>
+<p>同时雨滴的初始速度为零，所以雨滴的速度是关于时间和加速度的函数，只不过在每个时刻，加速度都是不同的（最后的匀速阶段除外，此时加速度恒为零），即 <span class="arithmatex"><span class="MathJax_Preview">v=\int_t a \; \text{dt}</span><script type="math/tex">v=\int_t a \; \text{dt}</script></span>，转换成微分形式就是 <span class="arithmatex"><span class="MathJax_Preview">a=\frac{dv}{dt}</span><script type="math/tex">a=\frac{dv}{dt}</script></span></p>
+<p>解：将分析过程中的 <span class="arithmatex"><span class="MathJax_Preview">a=\frac{dv}{dt}</span><script type="math/tex">a=\frac{dv}{dt}</script></span> 代入 <span class="arithmatex"><span class="MathJax_Preview">a=\frac{mg-f}{m}</span><script type="math/tex">a=\frac{mg-f}{m}</script></span> 就能够得到：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}mg - f = m \frac{dv}{dt}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}mg - f = m \frac{dv}{dt}\end{equation}</script>
+</div>
+<p>该式就是<strong>微分方程</strong>；</p>
+<p>对该微分方程进行变换：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}
+mg - f = m \frac{dv}{dt} &amp; \qquad \text{将}dt\text{乘到左侧} \\
+(mg - f) \cdot dt = m \cdot dv &amp;\qquad \text{等式两边同时除以}m(mg-f) \\
+\frac{1}{m} dt = \frac{1}{mg - f} dv &amp;\qquad \text{将}f=kv\text{代入该式}\\
+\frac{1}{m} dt = \frac{1}{mg - kv} dv &amp;\qquad \text{对两边同时求积分}\\
+\int \frac{1}{m} dt = \int \frac{1}{mg - kv} dv
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+mg - f = m \frac{dv}{dt} & \qquad \text{将}dt\text{乘到左侧} \\
+(mg - f) \cdot dt = m \cdot dv &\qquad \text{等式两边同时除以}m(mg-f) \\
+\frac{1}{m} dt = \frac{1}{mg - f} dv &\qquad \text{将}f=kv\text{代入该式}\\
+\frac{1}{m} dt = \frac{1}{mg - kv} dv &\qquad \text{对两边同时求积分}\\
+\int \frac{1}{m} dt = \int \frac{1}{mg - kv} dv
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>上式的等号左侧求积分是容易的，<span class="arithmatex"><span class="MathJax_Preview">\frac{1}{m}</span><script type="math/tex">\frac{1}{m}</script></span> 是与 <span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 无关的常数，所以左侧的值为 <span class="arithmatex"><span class="MathJax_Preview">\frac{t}{m}</span><script type="math/tex">\frac{t}{m}</script></span>；而等式右侧则需要凑微分，变形如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}
+\int \frac{1}{m} dt &amp;= \int \frac{1}{mg - kv} dv\\
+\int \frac{1}{m} dt &amp;= -\frac{1}{k}\int \frac{1}{mg - kv} d(mg-kv)\\
+\frac{t}{m} + C &amp;= -\frac{1}{k} \cdot \ln(mg-kv) \\
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+\int \frac{1}{m} dt &= \int \frac{1}{mg - kv} dv\\
+\int \frac{1}{m} dt &= -\frac{1}{k}\int \frac{1}{mg - kv} d(mg-kv)\\
+\frac{t}{m} + C &= -\frac{1}{k} \cdot \ln(mg-kv) \\
+\end{split}
+\end{equation}
+</script>
+</div>
+<blockquote>
+<p>注：对数的微分公式：<span class="arithmatex"><span class="MathJax_Preview">\frac{d}{dx}(\ln x)=\frac{1}{x}</span><script type="math/tex">\frac{d}{dx}(\ln x)=\frac{1}{x}</script></span></p>
+</blockquote>
+<p>由于题目中是要求速度 <span class="arithmatex"><span class="MathJax_Preview">v</span><script type="math/tex">v</script></span> 与时间 <span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 的函数关系，所以对上述公式对一下变形整理：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}
+\frac{t}{m} + C &amp;= -\frac{1}{k} \cdot \ln(mg-kv) \\
+-k (\frac{t}{m} + C) &amp;= \ln(mg-kv) \\
+e^{-k (\frac{t}{m} + C)} &amp;= mg-kv \\
+v &amp;= \frac{mg}{k} - \frac{1}{k}e^{-k (\frac{t}{m} + C)} \\
+v &amp;= \frac{mg}{k} - \frac{1}{k} e^{-kC} e^{-k \frac{t}{m}} \\
+v &amp;= \frac{mg}{k} - C_1 \cdot e^{-k \frac{t}{m}} \\
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+\frac{t}{m} + C &= -\frac{1}{k} \cdot \ln(mg-kv) \\
+-k (\frac{t}{m} + C) &= \ln(mg-kv) \\
+e^{-k (\frac{t}{m} + C)} &= mg-kv \\
+v &= \frac{mg}{k} - \frac{1}{k}e^{-k (\frac{t}{m} + C)} \\
+v &= \frac{mg}{k} - \frac{1}{k} e^{-kC} e^{-k \frac{t}{m}} \\
+v &= \frac{mg}{k} - C_1 \cdot e^{-k \frac{t}{m}} \\
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>至此，已经将公式（1）这个微分方程的通解解出来了，在该题目中当<span class="arithmatex"><span class="MathJax_Preview">t=0</span><script type="math/tex">t=0</script></span>时：<span class="arithmatex"><span class="MathJax_Preview">v=0</span><script type="math/tex">v=0</script></span>；可以利用这个初始条件将常数项 <span class="arithmatex"><span class="MathJax_Preview">C_1</span><script type="math/tex">C_1</script></span> 也解出来，这样就得到了相应的特解，这一步比较简单，这里省略了；</p>
+<h3 id="12">1.2 雨滴下落问题中速度与时间的分析</h3>
+<p>下面结合上述题目中的物理场景，对上述最终解出来的通解进行一下分析；</p>
+<p>首先最终求得的通解为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}v = \frac{mg}{k} - C_1 \cdot e^{-k \frac{t}{m}} \end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}v = \frac{mg}{k} - C_1 \cdot e^{-k \frac{t}{m}} \end{equation}</script>
+</div>
 <p>其中：</p>
-<p><span class="arithmatex"><span class="MathJax_Preview">\overrightarrow{x^{(i)}}=(x_1^{(i)}, x_2^{(i)}, x_3^{(i)}, ..., x_d^{(i)})^T \in R^d</span><script type="math/tex">\overrightarrow{x^{(i)}}=(x_1^{(i)}, x_2^{(i)}, x_3^{(i)}, ..., x_d^{(i)})^T \in R^d</script></span> 表示第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据的特征；</p>
-<p><span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span> 表示每条数据特征的维度；</p>
-<p><span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 表示总的数据量；</p>
-<p><span class="arithmatex"><span class="MathJax_Preview">y^{(i)} \in R</span><script type="math/tex">y^{(i)} \in R</script></span> 表示第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据的标签；</p>
-<p><strong>符号说明</strong>：右上角的角标代表第几条数据，右下角的角标代表第几个特征，比如 <span class="arithmatex"><span class="MathJax_Preview">x_j^{(i)}</span><script type="math/tex">x_j^{(i)}</script></span> 表示第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条数据的第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个特征的值；</p>
-<h2 id="2">2、建立模型</h2>
-<div class="arithmatex">
-<div class="MathJax_Preview">
-\begin{equation}
-\begin{split}   
-h_ \theta (\overrightarrow{x^{(i)}}) &amp;= \theta_0 + \theta_1 x_1^{(i)} + \theta_2 x_2^{(i)} + ... + \theta_d x_d^{(i)} \\
-&amp;= \sum_{j=0}^d \theta_j x_j^{(i)}
-\end{split}
-\end{equation}
-</div>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{split}   
-h_ \theta (\overrightarrow{x^{(i)}}) &= \theta_0 + \theta_1 x_1^{(i)} + \theta_2 x_2^{(i)} + ... + \theta_d x_d^{(i)} \\
-&= \sum_{j=0}^d \theta_j x_j^{(i)}
-\end{split}
-\end{equation}
-</script>
-</div>
-<p>上式中 <span class="arithmatex"><span class="MathJax_Preview">\theta_0</span><script type="math/tex">\theta_0</script></span> 是bias，为了便于计算，假设 <span class="arithmatex"><span class="MathJax_Preview">x_0^{(i)}=1</span><script type="math/tex">x_0^{(i)}=1</script></span>，则可以直接将 <span class="arithmatex"><span class="MathJax_Preview">\theta_0</span><script type="math/tex">\theta_0</script></span> 合并到 <span class="arithmatex"><span class="MathJax_Preview">\sum_{j=0}^d \theta_j x_j^{(i)}</span><script type="math/tex">\sum_{j=0}^d \theta_j x_j^{(i)}</script></span> 中。</p>
-<p>一般的，模型的输出会记为 <span class="arithmatex"><span class="MathJax_Preview">\hat{y}^{(i)}</span><script type="math/tex">\hat{y}^{(i)}</script></span>，则有：</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">\hat{y}^{(i)}=h_ \theta (\overrightarrow{x^{(i)}})</div>
-<script type="math/tex; mode=display">\hat{y}^{(i)}=h_ \theta (\overrightarrow{x^{(i)}})</script>
-</div>
-<h2 id="3">3、代价函数</h2>
-<p>使用最小二乘（least mean squares）作为代价函数，如下：</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">J(\theta) = \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2</div>
-<script type="math/tex; mode=display">J(\theta) = \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2</script>
-</div>
-<h2 id="4">4、梯度下降求解</h2>
-<h3 id="41">4.1求解梯度</h3>
-<div class="arithmatex">
-<div class="MathJax_Preview">
-\begin{equation}
-\begin{split}   
-\frac{\partial}{\partial \theta_j} J(\theta) &amp;= \frac{\partial}{\partial \theta_j} \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2 \\
-&amp;= \frac{1}{2} \cdot 2 \cdot \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) \cdot \frac{\partial}{\partial \theta_j} (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) \\
-&amp;= \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j
-\end{split}
-\end{equation}
-</div>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{split}   
-\frac{\partial}{\partial \theta_j} J(\theta) &= \frac{\partial}{\partial \theta_j} \frac{1}{2} \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)})^2 \\
-&= \frac{1}{2} \cdot 2 \cdot \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) \cdot \frac{\partial}{\partial \theta_j} (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) \\
-&= \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j
-\end{split}
-\end{equation}
-</script>
-</div>
-<h3 id="42">4.2 梯度下降</h3>
-<p>对于权重 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 每次迭代更新的公式为：</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">
-\begin{equation}
-\begin{split}   
-\theta_j &amp;:= \theta_j - \gamma \frac{\partial}{\partial \theta_j} J(\theta) \\
-&amp;:= \theta_j - \gamma \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j
-\end{split}
-\end{equation}
-</div>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{split}   
-\theta_j &:= \theta_j - \gamma \frac{\partial}{\partial \theta_j} J(\theta) \\
-&:= \theta_j - \gamma \sum_{i=1}^n (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j
-\end{split}
-\end{equation}
-</script>
-</div>
-<p>其中 <span class="arithmatex"><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span> 为学习率；符号 <span class="arithmatex"><span class="MathJax_Preview">:=</span><script type="math/tex">:=</script></span> 表示赋值运算符；</p>
-<h3 id="43">4.3 随机梯度下降</h3>
-<p>在梯度下降中，每次对 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 的更新都是求解出 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 条数据在 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 上的所有梯度之后再进行更新。如果每条数据求解出梯度之后都对 <span class="arithmatex"><span class="MathJax_Preview">\theta_j</span><script type="math/tex">\theta_j</script></span> 更新一次，则为随机梯度下降，公式如下：</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">\theta_j := \theta_j - \gamma (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j</div>
-<script type="math/tex; mode=display">\theta_j := \theta_j - \gamma (h_ \theta (\overrightarrow{x^{(i)}}) - y_{(i)}) x_j</script>
-</div>
-<h2 id="5">5、直接求解析解</h2>
-<p>待补充；</p></div>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">\frac{mg}{k}</span><script type="math/tex">\frac{mg}{k}</script></span> 是与时间无关的常数，且大于0；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">C_1 = \frac{1}{k} e^{-kC}</span><script type="math/tex">C_1 = \frac{1}{k} e^{-kC}</script></span> 是与时间无关的常数，由于 <span class="arithmatex"><span class="MathJax_Preview">e^{-kC}</span><script type="math/tex">e^{-kC}</script></span> 大于零，所以 <span class="arithmatex"><span class="MathJax_Preview">C_1</span><script type="math/tex">C_1</script></span> 也大于零；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">-\frac{k}{m}</span><script type="math/tex">-\frac{k}{m}</script></span> 是与时间无关的常数，且小于零；</li>
+</ul>
+<p>另外，容易知道随着 <span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 的增大，<span class="arithmatex"><span class="MathJax_Preview">e^{-\frac{k}{m}t}</span><script type="math/tex">e^{-\frac{k}{m}t}</script></span> 是逐渐趋于零的；所以随着 <span class="arithmatex"><span class="MathJax_Preview">t</span><script type="math/tex">t</script></span> 的增大，<span class="arithmatex"><span class="MathJax_Preview">C_1 \cdot e^{-k \frac{t}{m}}</span><script type="math/tex">C_1 \cdot e^{-k \frac{t}{m}}</script></span> 是逐渐趋于零的；<span class="arithmatex"><span class="MathJax_Preview">v</span><script type="math/tex">v</script></span> 是趋于常数项 <span class="arithmatex"><span class="MathJax_Preview">\frac{mg}{k}</span><script type="math/tex">\frac{mg}{k}</script></span> 的；该常数项就是最终匀速运动阶段的速度；</p>
+<h3 id="13">1.3 关于微分方程</h3>
+<p>之前的方程，要求解的变量是一个数；</p>
+<p>微分方程，比如上例中，要求解的变量是一个函数；</p></div>
         
         
     </div>
