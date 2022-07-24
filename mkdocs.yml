@@ -26,8 +26,8 @@ theme:
         - python
 
 nav:
-    - "Home": "深度学习.md"
-    - "深度学习": "深度学习.md"
+    - "Home": "index.md"
+    - "深度学习": "index.md"
     - "统计学习": "统计学习.md"
     - "其他": "其他.md"
 
@@ -36,7 +36,7 @@ extra_css:
 
 markdown_extensions:
     - toc:
-        permalink: False
+        permalink: "#"
     - mdx_gh_links:
         user: mkdocs
         repo: mkdocs
