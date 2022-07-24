@@ -71,13 +71,13 @@
                 
                 
                     <li >
-                        <a href="../../">Home</a>
+                        <a href="../../..">Home</a>
                     </li>
                 
                 
                 
                     <li >
-                        <a href="../../">深度学习</a>
+                        <a href="../../..">深度学习</a>
                     </li>
                 
                 
@@ -129,8 +129,8 @@
 </div></div>
         <div class="col-md-8" role="main">
 
-<h1 id="layer-normalize">Layer Normalize</h1>
-<h2 id="1ln">1、LN的具体操作步骤</h2>
+<h1 id="layer-normalize">Layer Normalize<a class="headerlink" href="#layer-normalize" title="Permanent link">#</a></h1>
+<h2 id="1ln">1、LN的具体操作步骤<a class="headerlink" href="#1ln" title="Permanent link">#</a></h2>
 <p>其操作步骤可分为三部分：</p>
 <ul>
 <li>求每条数据各特征之间的均值和标准差；</li>
@@ -169,7 +169,7 @@
 <div class="MathJax_Preview">y_i^{(j)} = g \hat{\alpha_i^{(j)}} + b </div>
 <script type="math/tex; mode=display">y_i^{(j)} = g \hat{\alpha_i^{(j)}} + b </script>
 </div>
-<h2 id="2ln">2、LN 为了解决什么问题</h2>
+<h2 id="2ln">2、LN 为了解决什么问题<a class="headerlink" href="#2ln" title="Permanent link">#</a></h2>
 <ol>
 <li>
 <p>深度模型训练时所需要的计算资源非常大，想要减少训练所需时间的一个方法是：normalize the activities of neurons</p>
@@ -178,7 +178,7 @@
 <p>增加训练过程的稳定性；</p>
 </li>
 </ol>
-<h2 id="3ln">3、LN 出现之前是如何解决上述问题的</h2>
+<h2 id="3ln">3、LN 出现之前是如何解决上述问题的<a class="headerlink" href="#3ln" title="Permanent link">#</a></h2>
 <p>LN 出现之前通过 BN 解决上述问题；</p>
 <p>BN的优点：</p>
 <ul>
@@ -191,7 +191,7 @@
 <li>当每条数据的长度不一致时，比如文本数据，效果不好；</li>
 <li>在 RNN 网络中，表现不好；</li>
 </ul>
-<h2 id="4ln">4、LN 的优势</h2>
+<h2 id="4ln">4、LN 的优势<a class="headerlink" href="#4ln" title="Permanent link">#</a></h2>
 <p>Normalization 的作用：降低了对参数初始化的需求，允许使用更大的学习率，有一定的正则化作用可抗过拟合，使训练更加稳定。</p>
 <p>假设某一层输出的中间结果为 <span class="arithmatex"><span class="MathJax_Preview">[m, T]</span><script type="math/tex">[m, T]</script></span>，<span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 为batch-size，<span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> 为每条数据的特征数量，那么：</p>
 <ul>
@@ -204,7 +204,7 @@
 <li>在 batch size 较小的网络中，表现较好；</li>
 <li>LN 抹杀了不同样本间的大小关系，保留了同一个样本内部的特征之间的大小关系，这对于时间序列任务或NLP任务来说非常重要；</li>
 </ul>
-<h2 id="5ln">5、LN效果测试代码</h2>
+<h2 id="5ln">5、LN效果测试代码<a class="headerlink" href="#5ln" title="Permanent link">#</a></h2>
 <pre><code class="language-python">import torch
 import torch.nn as nn
 

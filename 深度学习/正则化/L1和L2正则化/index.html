@@ -71,13 +71,13 @@
                 
                 
                     <li >
-                        <a href="../../">Home</a>
+                        <a href="../../..">Home</a>
                     </li>
                 
                 
                 
                     <li >
-                        <a href="../../">深度学习</a>
+                        <a href="../../..">深度学习</a>
                     </li>
                 
                 
@@ -138,11 +138,11 @@
 </div></div>
         <div class="col-md-8" role="main">
 
-<h1 id="_1">正则化</h1>
+<h1 id="_1">正则化<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
 <blockquote>
 <p>说明：在该篇文章中所有的推导都忽略了偏置项 bias；</p>
 </blockquote>
-<h2 id="1l2">1、L2正则</h2>
+<h2 id="1l2">1、L2正则<a class="headerlink" href="#1l2" title="Permanent link">#</a></h2>
 <p>正则化项为 <span class="arithmatex"><span class="MathJax_Preview">\Omega (\theta) = \frac{1}{2}||\theta||^2_2</span><script type="math/tex">\Omega (\theta) = \frac{1}{2}||\theta||^2_2</script></span>，系数 <span class="arithmatex"><span class="MathJax_Preview">\frac{1}{2}</span><script type="math/tex">\frac{1}{2}</script></span> 是为了求导时得到的系数为 <span class="arithmatex"><span class="MathJax_Preview">1</span><script type="math/tex">1</script></span>；</p>
 <p><span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化能够使参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的方差更接近0；</p>
 <p>目标函数：</p>
@@ -171,7 +171,7 @@
 <script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \nabla_{\theta} L(\theta)\end{equation}</script>
 </div>
 <p>对比公式<span class="arithmatex"><span class="MathJax_Preview">(4)</span><script type="math/tex">(4)</script></span>和公式<span class="arithmatex"><span class="MathJax_Preview">(5)</span><script type="math/tex">(5)</script></span>可知，<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>正则化对梯度更新的影响是：每一步执行更新前，会对权重向量乘以一个常数因子来收缩权重向量，使参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的方差更接近0，因此<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>也被称为<strong>权重衰减</strong>；</p>
-<h2 id="2l1">2、L1正则</h2>
+<h2 id="2l1">2、L1正则<a class="headerlink" href="#2l1" title="Permanent link">#</a></h2>
 <p>正则化项为 <span class="arithmatex"><span class="MathJax_Preview">\Omega(\theta) = ||\theta||_1 = \sum_{i=1}^d |\theta_i|</span><script type="math/tex">\Omega(\theta) = ||\theta||_1 = \sum_{i=1}^d |\theta_i|</script></span>，即各个参数的绝对值之和；</p>
 <p>目标函数：</p>
 <div class="arithmatex">
@@ -211,8 +211,8 @@
 <blockquote>
 <p>特别说明：对于带有 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则的目标函数，由于其不是处处可导，所以一般不使用梯度下降法进行求解，这里只是和 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则做一个类似的讨论。在本文的最后一部分会介绍坐标轴下降法，是更常用的用于求解带有 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则的目标函数的方法；</p>
 </blockquote>
-<h2 id="3lasso">3、Lasso回归与岭回归</h2>
-<h3 id="31-lasso">3.1 Lasso回归与岭回归的定义</h3>
+<h2 id="3lasso">3、Lasso回归与岭回归<a class="headerlink" href="#3lasso" title="Permanent link">#</a></h2>
+<h3 id="31-lasso">3.1 Lasso回归与岭回归的定义<a class="headerlink" href="#31-lasso" title="Permanent link">#</a></h3>
 <p>在线性回归的目标函数上添加上 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 或 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则化项，则可以得到Lasso回归和岭回归，其公式如下：</p>
 <p>Lasso回归：</p>
 <div class="arithmatex">
@@ -224,7 +224,7 @@
 <div class="MathJax_Preview">\begin{equation}J(\theta)=L(\theta)+ \lambda \cdot \frac{1}{2} ||\theta||_2^2= \frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \lambda \cdot \frac{1}{2} ||\theta||_2^2\end{equation}</div>
 <script type="math/tex; mode=display">\begin{equation}J(\theta)=L(\theta)+ \lambda \cdot \frac{1}{2} ||\theta||_2^2= \frac{1}{2}\sum_{i=1}^n (h_{\theta}(x_i) - y_i)^2 + \lambda \cdot \frac{1}{2} ||\theta||_2^2\end{equation}</script>
 </div>
-<h3 id="32-l1">3.2 L1为何能做特征筛选</h3>
+<h3 id="32-l1">3.2 L1为何能做特征筛选<a class="headerlink" href="#32-l1" title="Permanent link">#</a></h3>
 <p>关于 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 有一个常见的结论是：</p>
 <ul>
 <li><span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span>：能够使权重值中的一些特征趋于0，因此可以用来做特征筛选；</li>
@@ -276,8 +276,8 @@
 <p>如上图所示，Lasso回归（即公式<span class="arithmatex"><span class="MathJax_Preview">(13)</span><script type="math/tex">(13)</script></span>）的约束条件为左图中灰色的方形区域；岭回归（即公式<span class="arithmatex"><span class="MathJax_Preview">(14)</span><script type="math/tex">(14)</script></span>）的约束条件为右图中灰色的圆形区域；两图中右上方的椭圆线为损失函数 <span class="arithmatex"><span class="MathJax_Preview">L(\theta)</span><script type="math/tex">L(\theta)</script></span> 的等高线，损失函数 <span class="arithmatex"><span class="MathJax_Preview">L(\theta)</span><script type="math/tex">L(\theta)</script></span> 在椭圆的中心处取得最小值。</p>
 <p>既要满足方形/圆形的灰色区域的约束，又要尽量取最小值，可知上述两个带约束的最优化问题的最优解都在：等高线与约束区域边界的交点处；即两个红色箭头所指的交点处。</p>
 <p>由于 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则对应的约束区域是方形的，椭圆形的等高线与方形区域边界的交点更容易出现在该方形区域的顶点上，也就是坐标轴上。而这些坐标轴上的点仅当前坐标轴对应的维度非0，其他维度取值都为0。所以相比于 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>，<span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span>更适合做特征选择。</p>
-<h2 id="4l2">4、带有L2正则的目标函数的求解</h2>
-<h3 id="41">4.1 公式</h3>
+<h2 id="4l2">4、带有L2正则的目标函数的求解<a class="headerlink" href="#4l2" title="Permanent link">#</a></h2>
+<h3 id="41">4.1 公式<a class="headerlink" href="#41" title="Permanent link">#</a></h3>
 <p>由于 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则本身连续且处处可微，所以直接使用梯度下降法即可进行求解。</p>
 <p>在第一部分的讨论中，已经求得了带有 <span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span> 正则的目标函数的梯度下降过程公式：</p>
 <div class="arithmatex">
@@ -285,8 +285,8 @@
 <script type="math/tex; mode=display">\begin{equation}\theta \leftarrow \theta - \gamma \cdot (\nabla_{\theta} L(\theta) + \lambda \theta)\end{equation}</script>
 </div>
 <p>这个公式很简单，下面看一下在Pytorch中是如何实现<span class="arithmatex"><span class="MathJax_Preview">L_2</span><script type="math/tex">L_2</script></span>正则的功能的。</p>
-<h3 id="42-pytorchl2">4.2 Pytorch中L2的实现</h3>
-<h4 id="421">4.2.1 调用方式</h4>
+<h3 id="42-pytorchl2">4.2 Pytorch中L2的实现<a class="headerlink" href="#42-pytorchl2" title="Permanent link">#</a></h3>
+<h4 id="421">4.2.1 调用方式<a class="headerlink" href="#421" title="Permanent link">#</a></h4>
 <p>在 pytorch 中L2正则是通过 weight decay 在优化器中实现的，只需要在初始化优化器时指定哪些参数需要L2正则，哪些参数不需要L2正则即可。如下所示：</p>
 <pre><code class="language-python">weight_decay = 0.01
 learning_rate = 0.00005
@@ -304,7 +304,7 @@ optimizer_grouped_parameters = [
 ]
 optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 </code></pre>
-<h4 id="422">4.2.2 源码</h4>
+<h4 id="422">4.2.2 源码<a class="headerlink" href="#422" title="Permanent link">#</a></h4>
 <p>以最简单的SGD优化器来看一下L2正则在优化器中具体是如何实现的：</p>
 <pre><code class="language-python">class SGD(Optimizer):
 
@@ -340,10 +340,10 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 </li>
 </ul>
 <p>代码中的注释很详细，不再赘述。</p>
-<h2 id="5l1">5、带有L1正则的目标函数的求解</h2>
+<h2 id="5l1">5、带有L1正则的目标函数的求解<a class="headerlink" href="#5l1" title="Permanent link">#</a></h2>
 <p>下面使用坐标轴下降法对带有 <span class="arithmatex"><span class="MathJax_Preview">L_1</span><script type="math/tex">L_1</script></span> 正则的目标函数进行求解；</p>
 <p>梯度下降法是沿着梯度的负方向下降；坐标轴下降法是沿着坐标轴方向下降；二者的相似点是都是迭代法；</p>
-<h3 id="51">5.1 优化问题</h3>
+<h3 id="51">5.1 优化问题<a class="headerlink" href="#51" title="Permanent link">#</a></h3>
 <p>先在这里列一下模型和目标函数，然后描述如何使用坐标轴下降法对该优化问题进行求解；</p>
 <p>模型为：<span class="arithmatex"><span class="MathJax_Preview">y = h_{\theta(x)}</span><script type="math/tex">y = h_{\theta(x)}</script></span>，其中权重参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的维度为 <span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span>，即 <span class="arithmatex"><span class="MathJax_Preview">\theta = (\theta_1, \theta_2, ..., \theta_d)</span><script type="math/tex">\theta = (\theta_1, \theta_2, ..., \theta_d)</script></span></p>
 <p>损失函数选取MSE，则目标函数为：</p>
@@ -351,7 +351,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 <div class="MathJax_Preview">J(\theta) = \frac{1}{2}\sum_{i=1}^n (y_i - \sum_{j=1}^d x_{ij} \cdot \theta_j)^2 + \lambda \sum_{j=1}^d |\theta_j|</div>
 <script type="math/tex; mode=display">J(\theta) = \frac{1}{2}\sum_{i=1}^n (y_i - \sum_{j=1}^d x_{ij} \cdot \theta_j)^2 + \lambda \sum_{j=1}^d |\theta_j|</script>
 </div>
-<h3 id="52">5.2 坐标轴下降法</h3>
+<h3 id="52">5.2 坐标轴下降法<a class="headerlink" href="#52" title="Permanent link">#</a></h3>
 <p>坐标轴下降算法过程分为三个步骤：</p>
 <ol>
 <li>
@@ -390,13 +390,13 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 </li>
 </ol>
 <p>以上就是坐标轴下降法：先随机初始化权重矩阵；然后对每个维度的参数进行优化，在优化第 <span class="arithmatex"><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span> 个维度时，将其它维度视为常量；待每个维度都优化一轮之后，检查是否可以终止：若可以终止，则优化结束，否则重复上述优化步骤；</p>
-<h3 id="53-arg-min_theta_l-jarg-min_theta_l-j">5.3 求解 <span class="arithmatex"><span class="MathJax_Preview">\arg \min_{\theta_l} J</span><script type="math/tex">\arg \min_{\theta_l} J</script></span></h3>
+<h3 id="53-arg-min_theta_l-jarg-min_theta_l-j">5.3 求解 <span class="arithmatex"><span class="MathJax_Preview">\arg \min_{\theta_l} J</span><script type="math/tex">\arg \min_{\theta_l} J</script></span><a class="headerlink" href="#53-arg-min_theta_l-jarg-min_theta_l-j" title="Permanent link">#</a></h3>
 <p>在上一小节遗留了一个问题，就是如何求解下式，在这一小节对该式进行求解。</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">\begin{equation}\theta_l^{(k)} = \arg \min_{\theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)})\end{equation}</div>
 <script type="math/tex; mode=display">\begin{equation}\theta_l^{(k)} = \arg \min_{\theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)})\end{equation}</script>
 </div>
-<h4 id="531">5.3.1 问题描述</h4>
+<h4 id="531">5.3.1 问题描述<a class="headerlink" href="#531" title="Permanent link">#</a></h4>
 <p>再次描述一下整个问题，如下：</p>
 <p>模型为：<span class="arithmatex"><span class="MathJax_Preview">y = h_{\theta(x)}</span><script type="math/tex">y = h_{\theta(x)}</script></span>，其中权重参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的维度为 <span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span>，即 <span class="arithmatex"><span class="MathJax_Preview">\theta = (\theta_1, \theta_2, ..., \theta_d)</span><script type="math/tex">\theta = (\theta_1, \theta_2, ..., \theta_d)</script></span></p>
 <p>目标函数为：</p>
@@ -411,7 +411,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 </div>
 <p>其中 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 表示数据集中的样本数量；<span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span> 表示每条样本的维度，同时也是权重参数 <span class="arithmatex"><span class="MathJax_Preview">\theta</span><script type="math/tex">\theta</script></span> 的维度；<span class="arithmatex"><span class="MathJax_Preview">\lambda</span><script type="math/tex">\lambda</script></span> 是超参数；</p>
 <p>求解上式，我们采用导数等于 <span class="arithmatex"><span class="MathJax_Preview">0</span><script type="math/tex">0</script></span> 的方式。所以下面将分为两部分说明：一部分是求导；另一部分是令导数等于 <span class="arithmatex"><span class="MathJax_Preview">0</span><script type="math/tex">0</script></span> 求解出 <span class="arithmatex"><span class="MathJax_Preview">\theta_l</span><script type="math/tex">\theta_l</script></span>；</p>
-<h4 id="532">5.3.2 求导</h4>
+<h4 id="532">5.3.2 求导<a class="headerlink" href="#532" title="Permanent link">#</a></h4>
 <div class="arithmatex">
 <div class="MathJax_Preview">\begin{equation}\begin{split}
 &amp; \frac{\partial}{\partial \theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)}) \\
@@ -472,7 +472,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 \end{cases}\end{equation}</script>
 </div>
 <p>至此，求导完成，下面令导数等于0，求解 <span class="arithmatex"><span class="MathJax_Preview">\theta_l</span><script type="math/tex">\theta_l</script></span>；</p>
-<h4 id="533-0-theta_ltheta_l">5.3.3 令导数等于0求解 <span class="arithmatex"><span class="MathJax_Preview">\theta_l</span><script type="math/tex">\theta_l</script></span></h4>
+<h4 id="533-0-theta_ltheta_l">5.3.3 令导数等于0求解 <span class="arithmatex"><span class="MathJax_Preview">\theta_l</span><script type="math/tex">\theta_l</script></span><a class="headerlink" href="#533-0-theta_ltheta_l" title="Permanent link">#</a></h4>
 <p>由于上一步中最后求得的导数为分段函数，这里也分段进行求解；</p>
 <ul>
 <li>
@@ -504,7 +504,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 \end{cases}\end{equation}</script>
 </div>
 <p>至此对 <span class="arithmatex"><span class="MathJax_Preview">\arg \min_{\theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)})</span><script type="math/tex">\arg \min_{\theta_l} J(\theta_1^{(k)}, \theta_2^{(k)}, ..., \theta_{l-1}^{(k)}, \theta_{l}, \theta_{l+1}^{(k-1)}, ..., \theta_d^{(k-1)})</script></span> 的求解完成。</p>
-<h4 id="534">5.3.4 伪代码实现</h4>
+<h4 id="534">5.3.4 伪代码实现<a class="headerlink" href="#534" title="Permanent link">#</a></h4>
 <p>前面已经说过多次，<span class="arithmatex"><span class="MathJax_Preview">r_l</span><script type="math/tex">r_l</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">z_l</span><script type="math/tex">z_l</script></span> 都是常量，可通过数据集 <span class="arithmatex"><span class="MathJax_Preview">\{(x_1,y_1), (x_2, y_2), ..., (x_n, y_n)\}</span><script type="math/tex">\{(x_1,y_1), (x_2, y_2), ..., (x_n, y_n)\}</script></span> 与 除了第 <span class="arithmatex"><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span> 维以外的权重参数 <span class="arithmatex"><span class="MathJax_Preview">\theta_1^{(k)}</span><script type="math/tex">\theta_1^{(k)}</script></span>、<span class="arithmatex"><span class="MathJax_Preview">\theta_2^{(k)}</span><script type="math/tex">\theta_2^{(k)}</script></span>、...、<span class="arithmatex"><span class="MathJax_Preview">\theta_{l-1}^{(k)}</span><script type="math/tex">\theta_{l-1}^{(k)}</script></span>、<span class="arithmatex"><span class="MathJax_Preview">\theta_{l+1}^{(k-1)}</span><script type="math/tex">\theta_{l+1}^{(k-1)}</script></span>、...、<span class="arithmatex"><span class="MathJax_Preview">\theta_d^{(k-1)}</span><script type="math/tex">\theta_d^{(k-1)}</script></span> 求解出来；</p>
 <p>据此给出伪代码如下：</p>
 <pre><code>function calculate_theta_l():
@@ -512,7 +512,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
     z_l = ... # 前面已解释了z_l可直接求得
     theta_l = max((r_l - lambda)/z_l, 0) + min((r_l + lambda)/z_l, 0) # 上面最后推导出来的分段函数（25）可以整合成这一行伪代码
 </code></pre>
-<h2 id="refrence">Refrence</h2>
+<h2 id="refrence">Refrence<a class="headerlink" href="#refrence" title="Permanent link">#</a></h2>
 <ul>
 <li>
 <p><a href="http://www.huaxiaozhuan.com/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/chapters/3_regularization.html">正则化：http://www.huaxiaozhuan.com/深度学习/chapters/3_regularization.html</a></p>

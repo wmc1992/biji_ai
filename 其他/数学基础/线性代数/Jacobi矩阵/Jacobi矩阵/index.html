@@ -71,13 +71,13 @@
                 
                 
                     <li >
-                        <a href="../../../../../%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">Home</a>
+                        <a href="../../../../..">Home</a>
                     </li>
                 
                 
                 
                     <li >
-                        <a href="../../../../../%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                        <a href="../../../../..">深度学习</a>
                     </li>
                 
                 
@@ -130,8 +130,8 @@
 </div></div>
         <div class="col-md-8" role="main">
 
-<h1 id="jacobi">Jacobi矩阵</h1>
-<h2 id="1jocabi">1、Jocabi矩阵</h2>
+<h1 id="jacobi">Jacobi矩阵<a class="headerlink" href="#jacobi" title="Permanent link">#</a></h1>
+<h2 id="1jocabi">1、Jocabi矩阵<a class="headerlink" href="#1jocabi" title="Permanent link">#</a></h2>
 <p>假设 <span class="arithmatex"><span class="MathJax_Preview">F : R_n \rightarrow R_m</span><script type="math/tex">F : R_n \rightarrow R_m</script></span> 是一个从 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 维欧氏空间映射到 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 维欧氏空间的函数。这个函数由 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 个实函数组成：</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">
@@ -180,7 +180,7 @@ J_F(x_1, x_2, ..., x_n) = \begin{bmatrix}
 </div>
 <p>在向量分析中，Jacobi矩阵是一阶偏导数以一定的方式排列成的矩阵；</p>
 <p>当 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 等于 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 时，Jacoba矩阵就变成了一个方阵，该方阵的行列式即为Jacobi行列式。</p>
-<h2 id="2">2、几何理解</h2>
+<h2 id="2">2、几何理解<a class="headerlink" href="#2" title="Permanent link">#</a></h2>
 <p>Jocabi矩阵的重要性在于它体现了一个可微方程与给定点的最优线性逼近；</p>
 <p>如果 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 是 <span class="arithmatex"><span class="MathJax_Preview">R^n</span><script type="math/tex">R^n</script></span> 中的一个点，<span class="arithmatex"><span class="MathJax_Preview">F</span><script type="math/tex">F</script></span> 在 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 点可微，那么Jacobi矩阵 <span class="arithmatex"><span class="MathJax_Preview">J_F(p)</span><script type="math/tex">J_F(p)</script></span> 是在这点的导数；在此情况下 <span class="arithmatex"><span class="MathJax_Preview">J_F(p)</span><script type="math/tex">J_F(p)</script></span> 这个线性映射即为 <span class="arithmatex"><span class="MathJax_Preview">F</span><script type="math/tex">F</script></span> 在点 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 附近的最优线性逼近，也就是说当点 <span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> 足够靠近点 <span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> 时，我们有：</p>
 <div class="arithmatex">
@@ -193,15 +193,15 @@ J_F(x_1, x_2, ..., x_n) = \begin{bmatrix}
 <p>上图中左侧的正方形经过变换矩阵<span class="arithmatex"><span class="MathJax_Preview">\begin{bmatrix}1 &amp; 0 \\ 1 &amp; 1\end{bmatrix}</span><script type="math/tex">\begin{bmatrix}1 & 0 \\ 1 & 1\end{bmatrix}</script></span>之后得到上图右侧的平行四边形；</p>
 <p>与上述这种变换的区别是，Jacobi矩阵中的每个元素并不都是常数，而是与 <span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> 相关的，当给定一个具体的 <span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> 之后，就可求出Jacobi矩阵中每个元素的值，此时在给定的 <span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> 的极小邻域内是一个线性变换。这就是：<strong>Jocabi矩阵体现了一个可微方程与给定点的最优线性逼近</strong>。</p>
 <p>关于Jacobi矩阵在几何方便的理解可以参考bilibili上的视频：<a href="https://www.bilibili.com/video/BV1NJ411r7ja/">《雅可比矩阵是什么东西》</a>；</p>
-<h2 id="3jocabi">3、另一个角度引出Jocabi矩阵</h2>
+<h2 id="3jocabi">3、另一个角度引出Jocabi矩阵<a class="headerlink" href="#3jocabi" title="Permanent link">#</a></h2>
 <p>Jocabi矩阵是某种映射函数的导数，只不过这种映射函数比较复杂，下面从简单到复杂把几种映射函数和其导数都列一下。</p>
-<h3 id="31">3.1 单函数单变量</h3>
+<h3 id="31">3.1 单函数单变量<a class="headerlink" href="#31" title="Permanent link">#</a></h3>
 <p>假设 <span class="arithmatex"><span class="MathJax_Preview">F : R \rightarrow R</span><script type="math/tex">F : R \rightarrow R</script></span> 是一个从一维欧氏空间映射到一维欧氏空间的函数，这个函数的形式为 <span class="arithmatex"><span class="MathJax_Preview">y=f(x)</span><script type="math/tex">y=f(x)</script></span>，则其导数为：</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">\begin{equation}\frac{df}{dx}\end{equation}</div>
 <script type="math/tex; mode=display">\begin{equation}\frac{df}{dx}\end{equation}</script>
 </div>
-<h3 id="32">3.2 单函数多变量</h3>
+<h3 id="32">3.2 单函数多变量<a class="headerlink" href="#32" title="Permanent link">#</a></h3>
 <p>假设 <span class="arithmatex"><span class="MathJax_Preview">F : R_n \rightarrow R</span><script type="math/tex">F : R_n \rightarrow R</script></span> 是一个从 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 维欧氏空间映射到一维欧氏空间的函数，这个函数的形式为 <span class="arithmatex"><span class="MathJax_Preview">y=f(x_1, x_2, ..., x_n)</span><script type="math/tex">y=f(x_1, x_2, ..., x_n)</script></span>，则其导数为：</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">\begin{equation}[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, ..., \frac{\partial f}{\partial x_n}]\end{equation}</div>
@@ -210,7 +210,7 @@ J_F(x_1, x_2, ..., x_n) = \begin{bmatrix}
 <blockquote>
 <p>PS：这里没有考虑应该是行向量还是列向量；</p>
 </blockquote>
-<h3 id="33">3.3 多函数多变量</h3>
+<h3 id="33">3.3 多函数多变量<a class="headerlink" href="#33" title="Permanent link">#</a></h3>
 <p>假设 <span class="arithmatex"><span class="MathJax_Preview">F : R_n \rightarrow R_m</span><script type="math/tex">F : R_n \rightarrow R_m</script></span> 是一个从 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> 维欧氏空间映射到 <span class="arithmatex"><span class="MathJax_Preview">m</span><script type="math/tex">m</script></span> 维欧氏空间的函数，这些个函数的形式为</p>
 <div class="arithmatex">
 <div class="MathJax_Preview">
@@ -258,7 +258,7 @@ J_F(x_1, x_2, ..., x_n) = \begin{bmatrix}
 </script>
 </div>
 <p>也就是Jocabi矩阵。</p>
-<h2 id="reference">Reference</h2>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">#</a></h2>
 <ul>
 <li><a href="https://www.cnblogs.com/rswss/p/11440144.html">雅可比矩阵（整理）: https://www.cnblogs.com/rswss/p/11440144.html</a></li>
 <li><a href="https://www.zhihu.com/question/22586361">如何理解雅克比矩阵: https://www.zhihu.com/question/22586361</a></li>
