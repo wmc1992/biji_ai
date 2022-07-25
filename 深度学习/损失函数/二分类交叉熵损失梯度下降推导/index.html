@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="学习笔记">
+    <meta name="author" content="mingchao.wang">
+    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E4%BA%8C%E5%88%86%E7%B1%BB%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%8E%A8%E5%AF%BC/">
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+
+    
+    <title>二分类交叉熵损失梯度下降推导 - 学习笔记</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../../css/base.min.css" rel="stylesheet">
+    <link href="../../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+    <link href="../../../css/extra.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../../..">学习笔记</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../..">深度学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/">统计学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E5%85%B6%E4%BB%96/">其他</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/wmc1992/biji_ai"><i class="fab fa-github"></i> GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#_1">二分类交叉熵损失梯度下降推导</a></li>
+            <li class="second-level"><a href="#1">1、问题描述</a></li>
+                
+            <li class="second-level"><a href="#2">2、求导</a></li>
+                
+            <li class="second-level"><a href="#3">3、梯度下降</a></li>
+                
+            <li class="second-level"><a href="#4">4、总结</a></li>
+                
+            <li class="second-level"><a href="#reference">Reference</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-8" role="main">
+
+<h1 id="_1">二分类交叉熵损失梯度下降推导<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<h2 id="1">1、问题描述<a class="headerlink" href="#1" title="Permanent link">#</a></h2>
+<p>假设模型为单个神经元，单输入，单输出，二分类任务，使用sigmoid做二分类，则其前向传播过程为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}z_i=wx_i+b\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}z_i=wx_i+b\end{equation}</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\hat{y}_i=\sigma(z_i)\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\hat{y}_i=\sigma(z_i)\end{equation}</script>
+</div>
+<p>其损失为（关于损失函数原理见<a href="../分类任务损失函数的原理/">分类任务损失函数的原理</a>）：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}L_i=-\Big[ y_i \log \hat{y}_i + (1-y_i)\log (1-\hat{y}_i) \Big]\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}L_i=-\Big[ y_i \log \hat{y}_i + (1-y_i)\log (1-\hat{y}_i) \Big]\end{equation}</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}L=\frac{1}{N} \sum_{i=1}^N L_i\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}L=\frac{1}{N} \sum_{i=1}^N L_i\end{equation}</script>
+</div>
+<p>符号说明：</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>：表示样本数量；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">x_i</span><script type="math/tex">x_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的输入；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">y_i</span><script type="math/tex">y_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的期望输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">\hat{y_i}</span><script type="math/tex">\hat{y_i}</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的模型输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本只经过权重矩阵，未经过激活函数的中间结果；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L_i</span><script type="math/tex">L_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span>：表示所有<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>和<span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span>：表示权重参数；</li>
+</ul>
+<h2 id="2">2、求导<a class="headerlink" href="#2" title="Permanent link">#</a></h2>
+<p>先使用链式求导法则求解 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial L_i}{\partial w}</span><script type="math/tex">\frac{\partial L_i}{\partial w}</script></span>，求解过程如下所示：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\frac{\partial L_i}{\partial w} &amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial w} \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) x_i \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) x_i \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) x_i \\
+&amp;= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)]x_i \\
+&amp;= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) x_i \\
+&amp;= (\hat{y}_i - y_i) x_i
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\frac{\partial L_i}{\partial w} &= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial w} \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) x_i \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) x_i \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) x_i \\
+&= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)]x_i \\
+&= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) x_i \\
+&= (\hat{y}_i - y_i) x_i
+\end{split}\end{equation}</script>
+</div>
+<p>再求解 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial L_i}{\partial b}</span><script type="math/tex">\frac{\partial L_i}{\partial b}</script></span>，求解过程如下所示：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\frac{\partial L_i}{\partial b}
+&amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial b} \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) \\
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) \\
+&amp;= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)] \\
+&amp;= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) \\
+&amp;= (\hat{y}_i - y_i)
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\frac{\partial L_i}{\partial b}
+&= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial b} \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) \\
+&= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) \\
+&= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)] \\
+&= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) \\
+&= (\hat{y}_i - y_i)
+\end{split}\end{equation}</script>
+</div>
+<blockquote>
+<p>说明：上述推导中使用到了sigmoid的求导公式，若 <span class="arithmatex"><span class="MathJax_Preview">f(z)=\frac{1}{1+e^{-z}}</span><script type="math/tex">f(z)=\frac{1}{1+e^{-z}}</script></span>，则有：<span class="arithmatex"><span class="MathJax_Preview">f^{\prime}(z) = f(z)(1 - f(z))</span><script type="math/tex">f^{\prime}(z) = f(z)(1 - f(z))</script></span></p>
+</blockquote>
+<p>至此求解出了两个导数：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{cases}
+\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i) x_i \\
+\frac{\partial L_i}{\partial b}=(\hat{y}_i - y_i)
+\end{cases}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{cases}
+\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i) x_i \\
+\frac{\partial L_i}{\partial b}=(\hat{y}_i - y_i)
+\end{cases}\end{equation}</script>
+</div>
+<h2 id="3">3、梯度下降<a class="headerlink" href="#3" title="Permanent link">#</a></h2>
+<p>求解出导数之后，权重值的更新比较简单，如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})\end{equation}</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})\end{equation}</script>
+</div>
+<h2 id="4">4、总结<a class="headerlink" href="#4" title="Permanent link">#</a></h2>
+<p>本文主要是对二分类交叉熵损失进行求导，以及给出其梯度下降的过程；</p>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">#</a></h2>
+<p>太早了，不记得了...</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Copyright &copy; 2021 Microsoft Research</small><br>
+            
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/yaml.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/django.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/python.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../../.."</script>
+    
+    <script src="../../../js/base.js"></script>
+    <script src="../../../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

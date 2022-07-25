@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="学习笔记">
+    <meta name="author" content="mingchao.wang">
+    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E5%9D%87%E6%96%B9%E5%B7%AE%E6%8D%9F%E5%A4%B1%E4%B8%8E%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E5%BC%82%E5%90%8C/">
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+
+    
+    <title>均方差损失与交叉熵损失异同 - 学习笔记</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../../css/base.min.css" rel="stylesheet">
+    <link href="../../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+    <link href="../../../css/extra.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../../..">学习笔记</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../..">深度学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/">统计学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E5%85%B6%E4%BB%96/">其他</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/wmc1992/biji_ai"><i class="fab fa-github"></i> GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#_1">均方差损失与交叉熵损失异同</a></li>
+            <li class="second-level"><a href="#_2">一、两者概念上的区别</a></li>
+                
+            <li class="second-level"><a href="#_3">二、两者更新速度上的区别</a></li>
+                
+                <li class="third-level"><a href="#21">2.1 均方差损失</a></li>
+                <li class="third-level"><a href="#22">2.2 二分类交叉熵损失</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-8" role="main">
+
+<h1 id="_1">均方差损失与交叉熵损失异同<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<blockquote>
+<p>说明：本文讨论的是在做分类任务时这两个损失的区别；</p>
+</blockquote>
+<h2 id="_2">一、两者概念上的区别<a class="headerlink" href="#_2" title="Permanent link">#</a></h2>
+<p>1、均方差损失(cross-entropy)：是求一个batch中n个样本的n个输出与其期望输出的差的平方的均值；</p>
+<p>2、交叉熵损失(MSE)：用来评估当前训练得到的概率分布与真实分布的差异情况，它刻画的是实际输出（概率）与期望输出（概率）的距离，也就是交叉熵的值越小，两个概率分布就越接近；</p>
+<h2 id="_3">二、两者更新速度上的区别<a class="headerlink" href="#_3" title="Permanent link">#</a></h2>
+<p>下面分别对均方差损失、二分类交叉熵损失、多分类交叉熵损失，推导其梯度下降的过程，并对其在梯度下降过程中优化的速度进行分析。</p>
+<h3 id="21">2.1 均方差损失<a class="headerlink" href="#21" title="Permanent link">#</a></h3>
+<h4 id="211">2.1.1 问题描述<a class="headerlink" href="#211" title="Permanent link">#</a></h4>
+<p>假设模型为单个神经元，单输入，单输出，二分类任务，使用sigmoid做二分类，则其前向传播过程为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">z_i=wx_i+b</div>
+<script type="math/tex; mode=display">z_i=wx_i+b</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\hat{y}_i=\sigma(z_i)</div>
+<script type="math/tex; mode=display">\hat{y}_i=\sigma(z_i)</script>
+</div>
+<p>其损失为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">L=\frac{1}{N} \sum_{i=1}^N L_i=\frac{1}{N} \sum_{i=1}^N \frac{(y_i - \hat{y}_i)^2}{2}</div>
+<script type="math/tex; mode=display">L=\frac{1}{N} \sum_{i=1}^N L_i=\frac{1}{N} \sum_{i=1}^N \frac{(y_i - \hat{y}_i)^2}{2}</script>
+</div>
+<p>符号说明：</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>：表示样本数量；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">x_i</span><script type="math/tex">x_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的输入；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">y_i</span><script type="math/tex">y_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的期望输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">\hat{y_i}</span><script type="math/tex">\hat{y_i}</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的真实输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本只经过权重矩阵，未经过激活函数的中间结果；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L_i</span><script type="math/tex">L_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span>：表示所有<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>和<span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span>：表示权重举证；</li>
+</ul>
+<h4 id="212">2.1.2 求导<a class="headerlink" href="#212" title="Permanent link">#</a></h4>
+<p _="%" endraw="endraw">{% raw %}
+$$
+\begin{equation}
+\begin{split}
+\frac{\partial L_i}{\partial w} &amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial w}\
+&amp;= (\hat{y}_i - y_i) \sigma^{\prime}(z_i) x_i \
+&amp;= (\hat{y}_i - y_i) \sigma(z_i)(1 - \sigma(z_i)) x_i \
+&amp;= (\hat{y}_i - y_i) \hat{y}_i (1 - \hat{y}_i) x_i
+\end{split}
+\end{equation}
+$$</p>
+<p _="%" endraw="endraw">{% raw %}
+$$
+\begin{equation}
+\begin{split} <br />
+\frac{\partial L_i}{\partial b} &amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial b}\
+&amp;= (\hat{y}_i - y_i) \sigma^{\prime}(z_i) \
+&amp;= (\hat{y}_i - y_i) \sigma(z_i)(1 - \sigma(z_i)) \
+&amp;= (\hat{y}_i - y_i) \hat{y}_i (1 - \hat{y}_i)
+\end{split}
+\end{equation}
+$$</p>
+<blockquote>
+<p>说明：上述推导中使用到了sigmoid的求导公式，若 <span class="arithmatex"><span class="MathJax_Preview">f(z)=\frac{1}{1+e^{-z}}</span><script type="math/tex">f(z)=\frac{1}{1+e^{-z}}</script></span>，则有：<span class="arithmatex"><span class="MathJax_Preview">f^{\prime}(z) = f(z)(1 - f(z))</span><script type="math/tex">f^{\prime}(z) = f(z)(1 - f(z))</script></span></p>
+</blockquote>
+<p>求解出导数之后，权重值的更新比较简单，如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})</div>
+<script type="math/tex; mode=display">w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})</div>
+<script type="math/tex; mode=display">b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})</script>
+</div>
+<h4 id="213">2.1.3 优化速度分析<a class="headerlink" href="#213" title="Permanent link">#</a></h4>
+<p>以对权重值 <span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span> 的更新进行分析，权重值 <span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span> 的更新速度分析方式完全相同；</p>
+<p>再重新写一下更新权重时的公式，将梯度公式 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial L_i}{\partial w} = (\hat{y}_i - y_i) \sigma^{\prime}(z_i) x_i</span><script type="math/tex">\frac{\partial L_i}{\partial w} = (\hat{y}_i - y_i) \sigma^{\prime}(z_i) x_i</script></span> 代入到权重更新的公式，可以得到下式：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}   
+w&amp;=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w}) \\
+&amp;= w - \eta \Big[\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i) \sigma^{\prime}(z_i) x_i \Big]
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}   
+w&=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w}) \\
+&= w - \eta \Big[\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i) \sigma^{\prime}(z_i) x_i \Big]
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>在上述公式中，<span class="arithmatex"><span class="MathJax_Preview">\eta</span><script type="math/tex">\eta</script></span> 是超参数，<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span> 为样本数量，<span class="arithmatex"><span class="MathJax_Preview">x_i</span><script type="math/tex">x_i</script></span> 为输入的值，这几个参数都不需要考虑；</p>
+<p>所以每次对权重更新的步长主要由 <span class="arithmatex"><span class="MathJax_Preview">(\hat{y}_i - y_i) \sigma^{\prime}(z_i)</span><script type="math/tex">(\hat{y}_i - y_i) \sigma^{\prime}(z_i)</script></span> 决定。</p>
+<p>其中 <span class="arithmatex"><span class="MathJax_Preview">\sigma^{\prime}(z_i)</span><script type="math/tex">\sigma^{\prime}(z_i)</script></span> 为 Sigmoid 函数的导数，下图是 Sigmoid 函数的图像，可以看出：当 <span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span> 比较小或者比较大时，<span class="arithmatex"><span class="MathJax_Preview">\sigma^{\prime}(z_i)</span><script type="math/tex">\sigma^{\prime}(z_i)</script></span> 的值（即下图曲线的斜率）都趋于0；也就是说当 <span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span> 比较小或者比较大时，其梯度也是趋于0的。</p>
+<p>而在做梯度下降时，希望当离目标较远时，每次更新的步长要大一些，可以快速收敛；当离目标较近时，每次更新的步长要小一些，可以防止在目标值附近震荡；</p>
+<p><strong>综上所述</strong>：在使用均方差损失时，当 <span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span> 比较小或者比较大时，其梯度都是趋于0的。所以当梯度较小时，无法判断距离目标点较远，还是较近，优化起来比较困难。</p>
+<p><img alt="" src="/resource/nlp_basis/Loss/均方差损失和交叉熵损失_003/01.png" /></p>
+<h3 id="22">2.2 二分类交叉熵损失<a class="headerlink" href="#22" title="Permanent link">#</a></h3>
+<p>常用的交叉熵损失又分为<code>二分类的交叉熵损失</code>（sigmoid）和<code>多分类的交叉熵损失</code>（softmax），这一部分先看二分类交叉熵损失，下一段再看多分类交叉熵损失；</p>
+<h4 id="221">2.2.1 问题描述<a class="headerlink" href="#221" title="Permanent link">#</a></h4>
+<p>假设模型为单个神经元，单输入，单输出，二分类任务，使用sigmoid做二分类，则其前向传播过程为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">z_i=wx_i+b</div>
+<script type="math/tex; mode=display">z_i=wx_i+b</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\hat{y}_i=\sigma(z_i)</div>
+<script type="math/tex; mode=display">\hat{y}_i=\sigma(z_i)</script>
+</div>
+<p>其损失为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">L_i=-\Big[ y_i \log \hat{y}_i + (1-y_i)\log (1-\hat{y}_i) \Big]</div>
+<script type="math/tex; mode=display">L_i=-\Big[ y_i \log \hat{y}_i + (1-y_i)\log (1-\hat{y}_i) \Big]</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">L=\frac{1}{N} \sum_{i=1}^N L_i</div>
+<script type="math/tex; mode=display">L=\frac{1}{N} \sum_{i=1}^N L_i</script>
+</div>
+<p>符号说明：</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>：表示样本数量；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">x_i</span><script type="math/tex">x_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的输入；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">y_i</span><script type="math/tex">y_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的期望输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">\hat{y_i}</span><script type="math/tex">\hat{y_i}</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的真实输出；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">z_i</span><script type="math/tex">z_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本只经过权重矩阵，未经过激活函数的中间结果；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L_i</span><script type="math/tex">L_i</script></span>：表示第<span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span>：表示所有<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>条样本的损失；</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>和<span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span>：表示权重举证；</li>
+</ul>
+<h4 id="222">2.2.2 求导<a class="headerlink" href="#222" title="Permanent link">#</a></h4>
+<p _="%" endraw="endraw">{% raw %}
+$$
+\begin{equation}
+\begin{split}
+\frac{\partial L_i}{\partial w} &amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial w} \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) x_i \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) x_i \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) x_i \
+&amp;= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)]x_i \
+&amp;= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) x_i \
+&amp;= (\hat{y}_i - y_i) x_i
+\end{split}
+\end{equation}
+$$</p>
+<p _="%" endraw="endraw">{% raw %}
+$$
+\begin{equation}
+\begin{split}
+\frac{\partial L_i}{\partial b} &amp;= \frac{\partial L_i}{\partial \hat{y}_i} \frac{\partial \hat{y}_i}{\partial z_i} \frac{\partial z_i}{\partial b} \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma^{\prime}(z_i) \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \sigma(z_i)(1-\sigma(z_i)) \
+&amp;= -(\frac{y_i}{\hat{y}_i} - \frac{1-y_i}{1-\hat{y}_i}) \hat{y}_i(1-\hat{y}_i) \
+&amp;= -[y_i(1-\hat{y}_i) - \hat{y}_i(1-y_i)] \
+&amp;= - (y_i - y_i \hat{y}_i - \hat{y}_i + y_i \hat{y}_i) \
+&amp;= (\hat{y}_i - y_i)
+\end{split}
+\end{equation}
+$$</p>
+<blockquote>
+<p>说明：上述推导中使用到了sigmoid的求导公式，若 <span class="arithmatex"><span class="MathJax_Preview">f(z)=\frac{1}{1+e^{-z}}</span><script type="math/tex">f(z)=\frac{1}{1+e^{-z}}</script></span>，则有：<span class="arithmatex"><span class="MathJax_Preview">f^{\prime}(z) = f(z)(1 - f(z))</span><script type="math/tex">f^{\prime}(z) = f(z)(1 - f(z))</script></span></p>
+</blockquote>
+<p>求解出导数之后，权重值的更新比较简单，如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})</div>
+<script type="math/tex; mode=display">w=w - \eta \frac{\partial L}{\partial w}=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w})</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})</div>
+<script type="math/tex; mode=display">b=b - \eta \frac{\partial L}{\partial b}=b - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial b})</script>
+</div>
+<h4 id="223">2.2.3 优化速度分析<a class="headerlink" href="#223" title="Permanent link">#</a></h4>
+<p>以对权重值 <span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span> 的更新进行分析，权重值 <span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span> 的更新速度分析方式完全相同；</p>
+<p>再重新写一下更新权重时的公式，将梯度公式 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial L_i}{\partial w} = (\hat{y}_i - y_i) x_i</span><script type="math/tex">\frac{\partial L_i}{\partial w} = (\hat{y}_i - y_i) x_i</script></span> 代入到权重更新的公式，可以得到下式：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\begin{equation}
+\begin{split}   
+w&amp;=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w}) \\
+&amp;= w - \eta \Big[\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)  x_i \Big]
+\end{split}
+\end{equation}
+</div>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}   
+w&=w - \eta (\frac{1}{N} \sum_{i=1}^N \frac{\partial L_i}{\partial w}) \\
+&= w - \eta \Big[\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)  x_i \Big]
+\end{split}
+\end{equation}
+</script>
+</div>
+<p>在上述公式中，<span class="arithmatex"><span class="MathJax_Preview">\eta</span><script type="math/tex">\eta</script></span> 是超参数，<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span> 为样本数量，<span class="arithmatex"><span class="MathJax_Preview">x_i</span><script type="math/tex">x_i</script></span> 为输入的值，这几个参数都不需要考虑；</p>
+<p>所以每次对权重更新的步长主要由 <span class="arithmatex"><span class="MathJax_Preview">(\hat{y}_i - y_i)</span><script type="math/tex">(\hat{y}_i - y_i)</script></span> 决定。</p>
+<p>将均方差损失的梯度与二分类交叉熵损失的梯度放在一起比较一下就非常清晰了，如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i)x_i \qquad // \text{二分类交叉熵损失的梯度}</div>
+<script type="math/tex; mode=display">\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i)x_i \qquad // \text{二分类交叉熵损失的梯度}</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i)\sigma^{\prime}(z_i) x_i \qquad// \text{均方差损失的梯度}</div>
+<script type="math/tex; mode=display">\frac{\partial L_i}{\partial w}=(\hat{y}_i - y_i)\sigma^{\prime}(z_i) x_i \qquad// \text{均方差损失的梯度}</script>
+</div>
+<p>可以看出两者之间仅差一个 <span class="arithmatex"><span class="MathJax_Preview">\sigma^{\prime}(z_i)</span><script type="math/tex">\sigma^{\prime}(z_i)</script></span>，所以有如下结论：</p>
+<ul>
+<li>
+<p>二分类交叉熵损失的梯度为期望输出与实际输出的差值，当距离目标点越远时，该差值越大，梯度越大；当距离目标点越近时，该差值越小，梯度越小；</p>
+</li>
+<li>
+<p>均方差损失的梯度中由于包含了 <span class="arithmatex"><span class="MathJax_Preview">\sigma^{\prime}(z_i)</span><script type="math/tex">\sigma^{\prime}(z_i)</script></span> 这一项，当距离目标点比较远时，梯度较小（趋于0）；当距离目标点较近时，梯度也较小（趋于0），不利于优化；</p>
+</li>
+</ul></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Copyright &copy; 2021 Microsoft Research</small><br>
+            
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/yaml.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/django.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/python.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../../.."</script>
+    
+    <script src="../../../js/base.js"></script>
+    <script src="../../../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
