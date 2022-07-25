@@ -22,7 +22,7 @@ $$
 J_F(x_1, x_2, ..., x_n) = \begin{bmatrix}
 \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} & ... & \frac{\partial f_1}{\partial x_n} \\
    \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} & ... & \frac{\partial f_2}{\partial x_n} \\
-   ... \\
+   ... & ... & ... & ... \\
    \frac{\partial f_m}{\partial x_1} & \frac{\partial f_m}{\partial x_2} & ... & \frac{\partial f_m}{\partial x_n} \\
 \end{bmatrix}
 \end{equation}
@@ -93,13 +93,56 @@ $$
 \begin{bmatrix}
 \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} & ... & \frac{\partial f_1}{\partial x_n} \\
    \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} & ... & \frac{\partial f_2}{\partial x_n} \\
-   ... \\
+   ... & ... & ... & ... \\
    \frac{\partial f_m}{\partial x_1} & \frac{\partial f_m}{\partial x_2} & ... & \frac{\partial f_m}{\partial x_n} \\
 \end{bmatrix}
 \end{equation}
 $$
 
 也就是Jocabi矩阵。
+
+## 4、Jocabi矩阵的应用
+
+### 4.1 向量对向量求导
+
+给定一个函数 $f(x)$，其有 $n$ 个输入和 $m$ 个输出，该函数的形式如下：
+
+$$\begin{equation}f(x_1, x_2, ..., x_n) = [f_1(x_1, x_2, ..., x_n), ..., f_m(x_1, x_2, ..., x_n)]\end{equation}$$
+
+将其拆开分成两部分表示的话如下所示：
+
+$$
+\begin{equation}
+\begin{cases}
+   y_1 = f_1(x_1, x_2, ..., x_n) \\
+   y_2 = f_2(x_1, x_2, ..., x_n) \\
+   ... \\
+   y_m = f_m(x_1, x_2, ..., x_n) \\
+\end{cases}
+\end{equation}
+$$
+
+$$\begin{equation}f(x_1, x_2, ..., x_n) = [y1, y2, ..., y_m]\end{equation}$$
+
+对该函数 $f(x)$ 的求导结果就是一个Jocabi矩阵。
+
+即：
+
+$$
+\begin{equation}
+\begin{split}
+\frac{\partial f}{\partial x} &= \frac{\partial [y_1, y_2, ..., y_m]}{\partial [x_1, x_2, ..., x_n]} \\
+&=\begin{bmatrix}
+   \frac{\partial y_1}{\partial x_1} & \frac{\partial y_1}{\partial x_2} & ... & \frac{\partial y_1}{\partial x_n} \\
+   \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2} & ... & \frac{\partial y_2}{\partial x_n} \\
+   ... & ... & ... & ... \\
+   \frac{\partial y_m}{\partial x_1} & \frac{\partial y_m}{\partial x_2} & ... & \frac{\partial y_m}{\partial x_n} \\
+\end{bmatrix}
+\end{split}
+\end{equation}
+$$
+
+Jocabi矩阵是向量对向量的求导结果这个很容易理解，应为这就是其定义。
 
 ## Reference
 
