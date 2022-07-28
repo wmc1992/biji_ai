@@ -1,23 +1,21 @@
 # Softmax 函数求导
 
-写在前面，其他的大部分笔记都没有区分向量与标量，不过该篇内容中有比较多的向量与标量的区分。所以使用粗体字母表示向量，正常粗细的字母表示标量。
-
 ## 1、问题描述
 
 softmax的公式为：
 
-$$\begin{equation}\mathbf{\hat{y}} = \text{softmax}(\mathbf{z})\end{equation}$$
+$$\begin{equation}\vec{\hat{y}} = \text{softmax}(\vec{z})\end{equation}$$
 
 上述公式中：
 
-* $\mathbf{z}$ 表示softmax的输入，是一个向量，维度为$d$，即 $\mathbf{z}=[z_1, z_2, \cdots, z_d]$；
-* $\mathbf{\hat{y}}$ 表示softmax的输出，是一个向量，维度为$d$，即 $\mathbf{\hat{y}}=[\hat{y}_1, \hat{y}_2, \cdots, \hat{y}_d]$；
+* $\vec{z}$ 表示softmax的输入，是一个向量，维度为$d$，即 $\vec{z}=[z_1, z_2, \cdots, z_d]$；
+* $\vec{\hat{y}}$ 表示softmax的输出，是一个向量，维度为$d$，即 $\vec{\hat{y}}=[\hat{y}_1, \hat{y}_2, \cdots, \hat{y}_d]$；
 
 将softmax的具体公式代入到公式（1）中，则有：
 
 $$\begin{equation}
 \begin{split}
-\mathbf{\hat{y}} &= \text{softmax}(\mathbf{z}) \\
+\vec{\hat{y}} &= \text{softmax}(\vec{z}) \\
 &= \text{softmax}([z_1, z_2, \cdots, z_d]) \\
 &= \Big[ \frac{e^{z_1}}{\sum_{i=1}^d e^{z_1}}, \frac{e^{z_2}}{\sum_{i=1}^d e^{z_1}}, \cdots, \frac{e^{z_d}}{\sum_{i=1}^d e^{z_1}} \Big] \\
 &= [\hat{y}_1, \hat{y}_2, \cdots, \hat{y}_d]
@@ -26,14 +24,14 @@ $$\begin{equation}
 
 对softmax求导就是要求解下式：
 
-$$\begin{equation}\frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}\end{equation}$$
+$$\begin{equation}\frac{\partial \vec{\hat{y}}}{\partial \vec{z}}\end{equation}$$
 
 ## 2、对softmax求导
 
 由于是向量对向量求导，所以其最终结果为Jacobi矩阵，如下：
 
 $$\begin{equation}
-\frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}=\begin{bmatrix}
+\frac{\partial \vec{\hat{y}}}{\partial \vec{z}}=\begin{bmatrix}
    \frac{\partial \hat{y}_1}{\partial z_1} & \frac{\partial \hat{y}_1}{\partial z_2} & \cdots & \frac{\partial \hat{y}_1}{\partial z_n} \\
    \frac{\partial \hat{y}_2}{\partial z_1} & \frac{\partial \hat{y}_2}{\partial z_2} & \cdots & \frac{\partial \hat{y}_2}{\partial z_n} \\
    \vdots & \vdots & \cdots & \vdots \\
@@ -47,13 +45,13 @@ $$\begin{equation}
 
 $$\begin{equation}
 \begin{split}
-\frac{\partial \hat{y}_j}{\partial \mathbf{z}}
+\frac{\partial \hat{y}_j}{\partial \vec{z}}
 &=[ \frac{\partial \hat{y}_j}{\partial z_1}, \frac{\partial \hat{y}_j}{\partial z_2}, \cdots ,\frac{\partial \hat{y}_j}{\partial z_j}, \cdots,\frac{\partial \hat{y}_j}{\partial z_n}] \\
 &=[ \frac{\partial}{\partial z_1}\big(\frac{e^{z_j}}{\sum_{i=1}^d e^{z_i}} \big), \frac{\partial}{\partial z_2}\big(\frac{e^{z_j}}{\sum_{i=1}^d e^{z_i}} \big), \cdots ,\frac{\partial}{\partial z_j}\big(\frac{e^{z_j}}{\sum_{i=1}^d e^{z_i}} \big), \cdots,\frac{\partial}{\partial z_n}\big(\frac{e^{z_j}}{\sum_{i=1}^d e^{z_i}} \big)]
 \end{split}
 \end{equation}$$
 
-$\frac{\partial \hat{y}_j}{\partial \mathbf{z}}$是一个向量，该向量中有 $d$ 个元素，下面逐个元素进行求解（下述公式中的(6)、(7)、(9)三个式子推导过程完全相同，只看一个即可；公式(8)的推导过程与另外三个式子是不同的）：
+$\frac{\partial \hat{y}_j}{\partial \vec{z}}$是一个向量，该向量中有 $d$ 个元素，下面逐个元素进行求解（下述公式中的(6)、(7)、(9)三个式子推导过程完全相同，只看一个即可；公式(8)的推导过程与另外三个式子是不同的）：
 
 $$\begin{equation}
 \begin{split}
@@ -95,7 +93,7 @@ $$\begin{equation}
 
 $$\begin{equation}
 \begin{split}
-\frac{\partial \hat{y}_j}{\partial \mathbf{z}}
+\frac{\partial \hat{y}_j}{\partial \vec{z}}
 &=[ \frac{\partial \hat{y}_j}{\partial z_1}, \frac{\partial \hat{y}_j}{\partial z_2}, \cdots ,\frac{\partial \hat{y}_j}{\partial z_j}, \cdots,\frac{\partial \hat{y}_j}{\partial z_n}] \\
 &=[- \hat{y}_j \hat{y}_1, - \hat{y}_j \hat{y}_2, \cdots, \hat{y}_j - (\hat{y}_j)^2, \cdots, - \hat{y}_j \hat{y}_d]
 \end{split}
@@ -106,7 +104,7 @@ $$\begin{equation}
 接下来可直接写出最终的Jacobi矩阵了：
 
 $$\begin{equation}
-\frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}=\begin{bmatrix}
+\frac{\partial \vec{\hat{y}}}{\partial \vec{z}}=\begin{bmatrix}
    \hat{y}_1-(\hat{y}_1)^2 & -\hat{y}_1 \hat{y}_2 & \cdots & -\hat{y}_1 \hat{y}_d \\
    -\hat{y}_2 \hat{y}_1 & \hat{y}_2-(\hat{y}_2)^2 & \cdots & -\hat{y}_2 \hat{y}_d \\
    \vdots & \vdots & \cdots & \vdots \\
