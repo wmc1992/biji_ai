@@ -24,7 +24,7 @@ $$\begin{equation}
 \end{split}
 \end{equation}$$
 
-目标是求解下式：
+对softmax求导就是要求解下式：
 
 $$\begin{equation}\frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}\end{equation}$$
 
