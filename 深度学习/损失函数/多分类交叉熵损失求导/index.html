@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="学习笔记">
+    <meta name="author" content="mingchao.wang">
+    <link rel="canonical" href="https://mingchao.wang/biji_ai/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E5%A4%9A%E5%88%86%E7%B1%BB%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E6%B1%82%E5%AF%BC/">
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+
+    
+    <title>多分类交叉熵损失求导 - 学习笔记</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../../css/base.min.css" rel="stylesheet">
+    <link href="../../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+    <link href="../../../css/extra.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../../..">学习笔记</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../..">深度学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/">统计学习</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../../%E5%85%B6%E4%BB%96/">其他</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/wmc1992/biji_ai"><i class="fab fa-github"></i> GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#_1">多分类交叉熵损失求导</a></li>
+            <li class="second-level"><a href="#1">1、前向传播过程中的符号定义</a></li>
+                
+            <li class="second-level"><a href="#2">2、损失函数中的符号定义</a></li>
+                
+            <li class="second-level"><a href="#3">3、求导</a></li>
+                
+                <li class="third-level"><a href="#31">3.1 总体分析</a></li>
+                <li class="third-level"><a href="#32">3.2 求导</a></li>
+                <li class="third-level"><a href="#33">3.3 最后</a></li>
+            <li class="second-level"><a href="#4">4、总结</a></li>
+                
+            <li class="second-level"><a href="#reference">Reference</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-8" role="main">
+
+<h1 id="_1">多分类交叉熵损失求导<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<blockquote>
+<p>1.由于不想每个向量都打上右上角的转置符号，所以本文的向量都是行向量，其与列向量没有本质区别；</p>
+<p>2.本文的推导过程省略了偏置项 <span class="arithmatex"><span class="MathJax_Preview">b</span><script type="math/tex">b</script></span>；</p>
+</blockquote>
+<p>多分类也就是softmax的损失的求导主要问题在于符号的定义上，符号表示说清楚了，求导是比较容易的。</p>
+<h2 id="1">1、前向传播过程中的符号定义<a class="headerlink" href="#1" title="Permanent link">#</a></h2>
+<p>模型假设为非常简单的：一个全连接层后接softmax做分类。那么其前向传播的公式为：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\vec{z^{(i)}}&amp;=\mathbf{W}\vec{x^{(i)}} \\
+\vec{\hat{y}^{(i)}}&amp;=\text{softmax}(\vec{z^{(i)}})
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\vec{z^{(i)}}&=\mathbf{W}\vec{x^{(i)}} \\
+\vec{\hat{y}^{(i)}}&=\text{softmax}(\vec{z^{(i)}})
+\end{split}\end{equation}</script>
+</div>
+<p>在上述公式中：</p>
+<ul>
+<li>
+<p>右上角的角标 <span class="arithmatex"><span class="MathJax_Preview">\cdot^{(i)}</span><script type="math/tex">\cdot^{(i)}</script></span> 表示第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条样本；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\vec{x^{(i)}}</span><script type="math/tex">\vec{x^{(i)}}</script></span> 表示第 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 条样本的输入特征，是一个向量；假设输入样本特征的维度为 <span class="arithmatex"><span class="MathJax_Preview">d_{input}</span><script type="math/tex">d_{input}</script></span>，则 <span class="arithmatex"><span class="MathJax_Preview">\vec{x^{(i)}} = \{x^{(i)}_1, x^{(i)}_2, ..., x^{(i)}_{d_{input}}\}</span><script type="math/tex">\vec{x^{(i)}} = \{x^{(i)}_1, x^{(i)}_2, ..., x^{(i)}_{d_{input}}\}</script></span>；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\mathbf{W}</span><script type="math/tex">\mathbf{W}</script></span> 是权重矩阵，假设其维度为 <span class="arithmatex"><span class="MathJax_Preview">(d_{input}, d)</span><script type="math/tex">(d_{input}, d)</script></span>；那么由于 <span class="arithmatex"><span class="MathJax_Preview">\vec{x^{(i)}}</span><script type="math/tex">\vec{x^{(i)}}</script></span> 维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d_{input})</span><script type="math/tex">(1, d_{input})</script></span>，<span class="arithmatex"><span class="MathJax_Preview">\mathbf{W}</span><script type="math/tex">\mathbf{W}</script></span> 的维度为 <span class="arithmatex"><span class="MathJax_Preview">(d_{input}, d)</span><script type="math/tex">(d_{input}, d)</script></span>，可以得出 <span class="arithmatex"><span class="MathJax_Preview">\vec{z^{(i)}}</span><script type="math/tex">\vec{z^{(i)}}</script></span> 的维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span>。（由于本文中都是行向量，所以上面公式（1）中写作 <span class="arithmatex"><span class="MathJax_Preview">\vec{x^{(i)}}\mathbf{W}</span><script type="math/tex">\vec{x^{(i)}}\mathbf{W}</script></span> 更合适）</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\vec{z^{(i)}}</span><script type="math/tex">\vec{z^{(i)}}</script></span> 表示全连接层的输出，同时也是softmax层的输入，按照上面的假设，其维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span>，即 <span class="arithmatex"><span class="MathJax_Preview">\vec{z^{(i)}}=\{z^{(i)}_1, z^{(i)}_2, ..., z^{(i)}_d\}</span><script type="math/tex">\vec{z^{(i)}}=\{z^{(i)}_1, z^{(i)}_2, ..., z^{(i)}_d\}</script></span>；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\vec{\hat{y}^{(i)}}</span><script type="math/tex">\vec{\hat{y}^{(i)}}</script></span> 表示softmax层的输出，在一般的分类模型中也是最后一层的输出，使用该值和 <span class="arithmatex"><span class="MathJax_Preview">\vec{y^{(i)}}</span><script type="math/tex">\vec{y^{(i)}}</script></span> 比较计算损失；softmax运算并不会改变向量的维度，所以 <span class="arithmatex"><span class="MathJax_Preview">\vec{\hat{y}^{(i)}}</span><script type="math/tex">\vec{\hat{y}^{(i)}}</script></span> 的维度也是 <span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span>（从这可以看出这个维度 <span class="arithmatex"><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span> 就是该多分类任务的类别个数），有 <span class="arithmatex"><span class="MathJax_Preview">\vec{\hat{y}^{(i)}}=\{\hat{y}^{(i)}_1, \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_d\}</span><script type="math/tex">\vec{\hat{y}^{(i)}}=\{\hat{y}^{(i)}_1, \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_d\}</script></span>；</p>
+</li>
+<li>
+<p>右下角的角标表示第几个维度的元素，所以仅向量/矩阵中的某个元素才有右下角的角标，向量/矩阵是肯定不会有右下角的角标的；</p>
+</li>
+</ul>
+<h2 id="2">2、损失函数中的符号定义<a class="headerlink" href="#2" title="Permanent link">#</a></h2>
+<p>损失函数的公式，如下所示：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}l^{(i)}=-\sum_{k=1}^d y^{(i)}_k \ln \hat{y}^{(i)}_k\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}l^{(i)}=-\sum_{k=1}^d y^{(i)}_k \ln \hat{y}^{(i)}_k\end{equation}</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}L=\frac{1}{N}\sum_{i=1}^N l^{(i)}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}L=\frac{1}{N}\sum_{i=1}^N l^{(i)}\end{equation}</script>
+</div>
+<p>上述公式中的公式（3）没有任何问题，只是对每条样本的损失求均值，<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span> 表示样本的总数，后面的分析和求导将只对公式（2）进行。</p>
+<p>这里的公式（2）和常见的多分类任务的损失函数形式上不太一致，常见的损失函数一般都是如下公式（4）的形式，下面专门说明一下这两种形式的损失函数：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}l^{(i)}=-\ln \hat{y}^{(i)}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}l^{(i)}=-\ln \hat{y}^{(i)}\end{equation}</script>
+</div>
+<p>容易知道对于多分类问题，其每条样本的标签对应的向量中，所有的元素里面有且仅有一个元素为1，其他元素都是0，即向量 <span class="arithmatex"><span class="MathJax_Preview">\vec{y^{(i)}}=\{y^{(i)}_1, y^{(i)}_2, ..., y^{(i)}_d\}</span><script type="math/tex">\vec{y^{(i)}}=\{y^{(i)}_1, y^{(i)}_2, ..., y^{(i)}_d\}</script></span> 中仅有一个元素为1，其他元素都为0。为了不失一般性，假设第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个元素为1，则有：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\vec{y^{(i)}}&amp;=\{y^{(i)}_1, y^{(i)}_2, ..., y^{(i)}_{j-1},y^{(i)}_j,y^{(i)}_{j+1}, ..., y^{(i)}_d\} \\
+&amp;=\{0, 0, ..., 0, 1, 0, ..., 0\}
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\vec{y^{(i)}}&=\{y^{(i)}_1, y^{(i)}_2, ..., y^{(i)}_{j-1},y^{(i)}_j,y^{(i)}_{j+1}, ..., y^{(i)}_d\} \\
+&=\{0, 0, ..., 0, 1, 0, ..., 0\}
+\end{split}\end{equation}</script>
+</div>
+<p>将 <span class="arithmatex"><span class="MathJax_Preview">\vec{\hat{y}^{(i)}}</span><script type="math/tex">\vec{\hat{y}^{(i)}}</script></span> 和 <span class="arithmatex"><span class="MathJax_Preview">\vec{y^{(i)}}</span><script type="math/tex">\vec{y^{(i)}}</script></span> 的各个元素代入到公式（2）中：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+l^{(i)}&amp;=-\sum_{k=1}^d y^{(i)}_k \ln \hat{y}^{(i)}_k \\
+&amp;=-\big[y^{(i)}_1 \ln \hat{y}^{(i)}_1 + y^{(i)}_2 \ln \hat{y}^{(i)}_2 + ... + y^{(i)}_j \ln \hat{y}^{(i)}_j + ... + y^{(i)}_d \ln \hat{y}^{(i)}_d\big] \\
+&amp;=-y^{(i)}_j \ln \hat{y}^{(i)}_j \\
+&amp;=-\ln \hat{y}^{(i)}_j
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+l^{(i)}&=-\sum_{k=1}^d y^{(i)}_k \ln \hat{y}^{(i)}_k \\
+&=-\big[y^{(i)}_1 \ln \hat{y}^{(i)}_1 + y^{(i)}_2 \ln \hat{y}^{(i)}_2 + ... + y^{(i)}_j \ln \hat{y}^{(i)}_j + ... + y^{(i)}_d \ln \hat{y}^{(i)}_d\big] \\
+&=-y^{(i)}_j \ln \hat{y}^{(i)}_j \\
+&=-\ln \hat{y}^{(i)}_j
+\end{split}\end{equation}</script>
+</div>
+<p>上述公式中第2行到第3行的原因是只有 <span class="arithmatex"><span class="MathJax_Preview">y^{(i)}_j</span><script type="math/tex">y^{(i)}_j</script></span> 为1，其他的像 <span class="arithmatex"><span class="MathJax_Preview">y^{(i)}_1</span><script type="math/tex">y^{(i)}_1</script></span>、<span class="arithmatex"><span class="MathJax_Preview">y^{(i)}_2</span><script type="math/tex">y^{(i)}_2</script></span>、<span class="arithmatex"><span class="MathJax_Preview">y^{(i)}_d</span><script type="math/tex">y^{(i)}_d</script></span> 等都为0；公式（6）最后的结果就是公式（4）的形式，只不过它把右下角的下标省略了。需要注意的是：<strong>公式（4）中的 <span class="arithmatex"><span class="MathJax_Preview">\hat{y}^{(i)}</span><script type="math/tex">\hat{y}^{(i)}</script></span> 是一个标量，它是公式（1）中的向量 <span class="arithmatex"><span class="MathJax_Preview">\vec{\hat{y}^{(i)}}</span><script type="math/tex">\vec{\hat{y}^{(i)}}</script></span> 中的一个元素</strong>，这是一个容易混淆的地方。</p>
+<p>至此，所有的符号说明完成，后面在求导时使用的损失函数是公式（2）的形式。</p>
+<h2 id="3">3、求导<a class="headerlink" href="#3" title="Permanent link">#</a></h2>
+<p>最终要求解的目标是下式，这里仅对softmax层求导，并不对前面的全连接求导，全连接做反向传播比较简单：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}\end{equation}</script>
+</div>
+<p>根据链式求导有：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}\end{equation}</script>
+</div>
+<h3 id="31">3.1 总体分析<a class="headerlink" href="#31" title="Permanent link">#</a></h3>
+<p>先总体分析一下：</p>
+<ul>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}</script></span> 是标量对向量求导（标量对向量求导：标量分别对向量中的每个元素求导，最终结果是一个向量，维度与原向量相同），结果是一个向量，维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span>；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</script></span> 是标量对向量求导，结果是一个向量，维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span>；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</script></span> 是向量对向量求导，结果是Jacobi矩阵，维度为 <span class="arithmatex"><span class="MathJax_Preview">(d, d)</span><script type="math/tex">(d, d)</script></span>；</p>
+</li>
+<li>
+<p><span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</script></span> 与 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</script></span> 相乘，是维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span> 的向量与维度为 <span class="arithmatex"><span class="MathJax_Preview">(d, d)</span><script type="math/tex">(d, d)</script></span> 的矩阵相乘，最终结果是一个维度为 <span class="arithmatex"><span class="MathJax_Preview">(1, d)</span><script type="math/tex">(1, d)</script></span> 的向量；</p>
+</li>
+</ul>
+<p>总体来看：在链式求导公式（8）中的各个维度是能够对应上的，没有问题。</p>
+<h3 id="32">3.2 求导<a class="headerlink" href="#32" title="Permanent link">#</a></h3>
+<p>先求 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</script></span>，求解结果如下：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}&amp;=\big[\frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_1}, \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_2}, ..., \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_j}, ..., \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_d} \big] \\
+&amp;=\big[0, 0, ..., -\frac{1}{\hat{y}^{(i)}_j}, ..., 0 \big]
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}&=\big[\frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_1}, \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_2}, ..., \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_j}, ..., \frac{\partial l^{(i)}}{\partial \hat{y}^{(i)}_d} \big] \\
+&=\big[0, 0, ..., -\frac{1}{\hat{y}^{(i)}_j}, ..., 0 \big]
+\end{split}\end{equation}</script>
+</div>
+<p>再求 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</script></span>，这个在文章 <a href="../Softmax函数求导/">Softmax函数求导</a> 中已经求解过了，直接使用其结论：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}
+\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}=\begin{bmatrix}
+   \hat{y}^{(i)}_1-(\hat{y}^{(i)}_1)^2 &amp; -\hat{y}^{(i)}_1 \hat{y}^{(i)}_2 &amp; \cdots &amp; -\hat{y}^{(i)}_1 \hat{y}^{(i)}_d \\
+   -\hat{y}^{(i)}_2 \hat{y}^{(i)}_1 &amp; \hat{y}^{(i)}_2-(\hat{y}^{(i)}_2)^2 &amp; \cdots &amp; -\hat{y}^{(i)}_2 \hat{y}^{(i)}_d \\
+   \vdots &amp; \vdots &amp; \cdots &amp; \vdots \\
+   -\hat{y}^{(i)}_d \hat{y}^{(i)}_1 &amp; -\hat{y}^{(i)}_d \hat{y}^{(i)}_2 &amp; \cdots &amp; \hat{y}^{(i)}_d-(\hat{y}^{(i)}_d)^2 \\
+\end{bmatrix}
+\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}
+\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}=\begin{bmatrix}
+   \hat{y}^{(i)}_1-(\hat{y}^{(i)}_1)^2 & -\hat{y}^{(i)}_1 \hat{y}^{(i)}_2 & \cdots & -\hat{y}^{(i)}_1 \hat{y}^{(i)}_d \\
+   -\hat{y}^{(i)}_2 \hat{y}^{(i)}_1 & \hat{y}^{(i)}_2-(\hat{y}^{(i)}_2)^2 & \cdots & -\hat{y}^{(i)}_2 \hat{y}^{(i)}_d \\
+   \vdots & \vdots & \cdots & \vdots \\
+   -\hat{y}^{(i)}_d \hat{y}^{(i)}_1 & -\hat{y}^{(i)}_d \hat{y}^{(i)}_2 & \cdots & \hat{y}^{(i)}_d-(\hat{y}^{(i)}_d)^2 \\
+\end{bmatrix}
+\end{equation}</script>
+</div>
+<p>然后将 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</script></span> 与 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</script></span> 相乘就得到了最终结果；可以看到 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</span><script type="math/tex">\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}}</script></span> 中只有第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 个元素非0，所以在 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</span><script type="math/tex">\frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}}</script></span> 中只有第 <span class="arithmatex"><span class="MathJax_Preview">j</span><script type="math/tex">j</script></span> 行会被使用到，其他行都与0相乘消去了：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\begin{split}
+\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}&amp;=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}} \\
+&amp;=-\frac{1}{\hat{y}^{(i)}_j} \big[-\hat{y}^{(i)}_j \hat{y}^{(i)}_1, -\hat{y}^{(i)}_j \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_j-(\hat{y}^{(i)}_j)^2, ..., -\hat{y}^{(i)}_j \hat{y}^{(i)}_d \big] \\
+&amp;= \big[\hat{y}^{(i)}_1, \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_j-1, ..., \hat{y}^{(i)}_d \big] \\
+&amp;= \vec{\hat{y}^{(i)}} - \vec{y^{(i)}}
+\end{split}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\begin{split}
+\frac{\partial l^{(i)}}{\partial \vec{z^{(i)}}}&=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}} \\
+&=-\frac{1}{\hat{y}^{(i)}_j} \big[-\hat{y}^{(i)}_j \hat{y}^{(i)}_1, -\hat{y}^{(i)}_j \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_j-(\hat{y}^{(i)}_j)^2, ..., -\hat{y}^{(i)}_j \hat{y}^{(i)}_d \big] \\
+&= \big[\hat{y}^{(i)}_1, \hat{y}^{(i)}_2, ..., \hat{y}^{(i)}_j-1, ..., \hat{y}^{(i)}_d \big] \\
+&= \vec{\hat{y}^{(i)}} - \vec{y^{(i)}}
+\end{split}\end{equation}</script>
+</div>
+<p>求解过程很复杂，求解的结果却很优雅。因为softmax函数和损失本身就是精心设计过的，才能在计算梯度时非常简单、高效。</p>
+<h3 id="33">3.3 最后<a class="headerlink" href="#33" title="Permanent link">#</a></h3>
+<p>如果要求解关于权重参数 <span class="arithmatex"><span class="MathJax_Preview">W</span><script type="math/tex">W</script></span> 的梯度，只需要在上述的链式求导公式中再加上一项即可，如下式：</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">\begin{equation}\frac{\partial l^{(i)}}{\partial W}=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}} \cdot \frac{\partial \vec{z^{(i)}}}{\partial W}\end{equation}</div>
+<script type="math/tex; mode=display">\begin{equation}\frac{\partial l^{(i)}}{\partial W}=\frac{\partial l^{(i)}}{\partial \vec{\hat{y}^{(i)}}} \cdot \frac{\partial \vec{\hat{y}^{(i)}}}{\partial \vec{z^{(i)}}} \cdot \frac{\partial \vec{z^{(i)}}}{\partial W}\end{equation}</script>
+</div>
+<p>求解出 <span class="arithmatex"><span class="MathJax_Preview">\frac{\partial \vec{z^{(i)}}}{\partial W}</span><script type="math/tex">\frac{\partial \vec{z^{(i)}}}{\partial W}</script></span> 即可；</p>
+<h2 id="4">4、总结<a class="headerlink" href="#4" title="Permanent link">#</a></h2>
+<p>本文主要是对softmax交叉熵损失做求导，用于进一步理解在多分类任务中反向传播的细节过程。</p>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/105758059">https://zhuanlan.zhihu.com/p/105758059</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/pinard/p/10750718.html">https://www.cnblogs.com/pinard/p/10750718.html</a></p>
+</li>
+<li>
+<p><a href="https://www.zhihu.com/question/39523290">https://www.zhihu.com/question/39523290 : "陈秋"的回答</a></p>
+</li>
+</ul></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Copyright &copy; 2021 Microsoft Research</small><br>
+            
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/yaml.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/django.min.js"></script>
+                <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/languages/python.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../../.."</script>
+    
+    <script src="../../../js/base.js"></script>
+    <script src="../../../mathjax-config.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
